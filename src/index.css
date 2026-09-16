@@ -2,15 +2,25 @@
 @import "@xyflow/react/dist/style.css";
 
 @theme {
-  --color-maroon: #8b1e3f;
-  --color-saffron: #e07a3f;
-  --color-saffron-ink: #7a3510;
-  --color-teal: #0f7a73;
-  --color-teal-ink: #083c39;
+  --color-maroon: #7d1634;
+  --color-maroon-dark: #4a091d;
+  --color-maroon-light: #9c2146;
+  --color-saffron: #d96f32;
+  --color-saffron-light: #f38f53;
+  --color-saffron-ink: #6d3311;
+  --color-teal: #0c6b65;
+  --color-teal-ink: #073834;
   --color-gold: #c9a227;
+  --color-gold-light: #f5d676;
+  --color-gold-dark: #917210;
   --color-cream: #fdfbf7;
-  --color-ink: #2a1810;
-  --font-display: 'Cinzel', 'Playfair Display', Georgia, serif;
+  --color-vellum: #f7f2e5;
+  --color-ink: #19100c;
+  --color-ink-deep: #0e0806;
+  --color-charcoal: #231915;
+
+  --font-display: 'Cinzel', serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 }
 
@@ -29,48 +39,129 @@ body {
 }
 
 .dark body {
-  background-color: var(--color-ink);
+  background-color: var(--color-ink-deep);
   color: var(--color-cream);
 }
 
-/* React Flow custom styling adjustments */
+/* Custom Archival Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(201, 162, 39, 0.3);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(201, 162, 39, 0.6);
+}
+
+/* Luxury Glassmorphism & Gold Highlights */
+.glass-panel {
+  background: rgba(253, 251, 247, 0.85);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(125, 22, 52, 0.12);
+}
+
+.dark .glass-panel {
+  background: rgba(25, 16, 12, 0.85);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(245, 214, 118, 0.14);
+}
+
+.gold-border-glow {
+  box-shadow: 0 0 25px -5px rgba(201, 162, 39, 0.25);
+}
+
+.dark .gold-border-glow {
+  box-shadow: 0 0 35px -5px rgba(245, 214, 118, 0.2);
+}
+
+/* Constellation grid for canvas and hero */
+.bg-constellation {
+  background-image: radial-gradient(rgba(125, 22, 52, 0.08) 1.2px, transparent 1.2px),
+    radial-gradient(rgba(201, 162, 39, 0.06) 1.2px, transparent 1.2px);
+  background-size: 32px 32px;
+  background-position: 0 0, 16px 16px;
+}
+
+.dark .bg-constellation {
+  background-image: radial-gradient(rgba(245, 214, 118, 0.1) 1.2px, transparent 1.2px),
+    radial-gradient(rgba(125, 22, 52, 0.15) 1.2px, transparent 1.2px);
+  background-size: 32px 32px;
+  background-position: 0 0, 16px 16px;
+}
+
+/* React Flow styling customization */
 .react-flow__attribution {
   display: none !important;
 }
 
 .react-flow__controls {
-  border-radius: 9999px !important;
+  border-radius: 16px !important;
   overflow: hidden !important;
-  box-shadow: 0 10px 25px -5px rgba(42, 24, 16, 0.15) !important;
-  border: 1px solid rgba(139, 30, 63, 0.15) !important;
+  box-shadow: 0 16px 40px -10px rgba(25, 16, 12, 0.2) !important;
+  border: 1px solid rgba(201, 162, 39, 0.25) !important;
+  background: rgba(253, 251, 247, 0.9) !important;
+  backdrop-filter: blur(12px) !important;
 }
 
 .dark .react-flow__controls {
-  border-color: rgba(253, 251, 247, 0.15) !important;
-  background-color: #2a1810 !important;
+  border-color: rgba(245, 214, 118, 0.25) !important;
+  background: rgba(25, 16, 12, 0.9) !important;
 }
 
 .react-flow__controls button {
-  border-bottom: 1px solid rgba(139, 30, 63, 0.1) !important;
-  background: white !important;
-  fill: #2a1810 !important;
+  border-bottom: 1px solid rgba(201, 162, 39, 0.15) !important;
+  background: transparent !important;
+  fill: #19100c !important;
+  transition: all 0.15s ease !important;
+}
+
+.react-flow__controls button:hover {
+  background: rgba(201, 162, 39, 0.15) !important;
+  fill: #7d1634 !important;
 }
 
 .dark .react-flow__controls button {
-  background: #2a1810 !important;
   fill: #fdfbf7 !important;
-  border-bottom-color: rgba(253, 251, 247, 0.1) !important;
+  border-bottom-color: rgba(245, 214, 118, 0.15) !important;
 }
 
-/* Print optimizations */
+.dark .react-flow__controls button:hover {
+  background: rgba(245, 214, 118, 0.15) !important;
+  fill: #f5d676 !important;
+}
+
+.react-flow__minimap {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(201, 162, 39, 0.25) !important;
+  box-shadow: 0 16px 40px -10px rgba(25, 16, 12, 0.25) !important;
+  background: rgba(253, 251, 247, 0.85) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+.dark .react-flow__minimap {
+  background: rgba(14, 8, 6, 0.9) !important;
+  border-color: rgba(245, 214, 118, 0.25) !important;
+}
+
+/* Archival Certificate Print Mode */
 @media print {
   .no-print {
     display: none !important;
   }
 
   body {
-    background: white !important;
-    color: black !important;
+    background: #fffdf9 !important;
+    color: #19100c !important;
   }
 
   .react-flow__controls,

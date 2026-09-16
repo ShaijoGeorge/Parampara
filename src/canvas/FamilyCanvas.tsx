@@ -50,6 +50,7 @@ export function FamilyCanvas({
               person: people[0]!,
               selected: false,
               template,
+              isRoot: false,
             },
           }
         }
@@ -61,22 +62,30 @@ export function FamilyCanvas({
             person,
             selected: person.id === selectedPersonId,
             template,
+            isRoot: person.id === rootPersonId,
           },
         }
       })
-      const nextEdges: FlowEdge[] = edges.map((edge) => ({
-        id: edge.id,
-        source: edge.fromId,
-        target: edge.toId,
-        sourceHandle: edge.type === 'spouse' ? 'r' : undefined,
-        targetHandle: edge.type === 'spouse' ? 'l' : undefined,
-        type: edge.type === 'spouse' ? 'straight' : 'smoothstep',
-        animated: false,
-        style: {
-          stroke: edge.type === 'spouse' ? '#c9a227' : skin.accent,
-          strokeWidth: edge.type === 'spouse' ? 2 : 2.4,
-        },
-      }))
+
+      const nextEdges: FlowEdge[] = edges.map((edge) => {
+        const isSpouse = edge.type === 'spouse'
+        return {
+          id: edge.id,
+          source: edge.fromId,
+          target: edge.toId,
+          sourceHandle: isSpouse ? 'r' : undefined,
+          targetHandle: isSpouse ? 'l' : undefined,
+          type: isSpouse ? 'straight' : 'smoothstep',
+          animated: false,
+          style: {
+            stroke: isSpouse ? '#c9a227' : skin.accent,
+            strokeWidth: isSpouse ? 2.5 : 2.4,
+            strokeDasharray: isSpouse ? '5 3' : undefined,
+            filter: 'drop-shadow(0 2px 4px rgba(25, 16, 12, 0.15))',
+          },
+        }
+      })
+
       setNodes(nextNodes.filter((node) => people.some((p) => p.id === node.id)))
       setFlowEdges(nextEdges)
     })
@@ -88,30 +97,32 @@ export function FamilyCanvas({
   const miniFill = useMemo(
     () => (n: Node) => {
       const person = people.find((p) => p.id === n.id)
-      return person?.isLate ? '#8b1e3f55' : skin.accent
+      if (person?.id === rootPersonId) return '#c9a227'
+      return person?.isLate ? '#7d163488' : skin.accent
     },
-    [people, skin.accent],
+    [people, rootPersonId, skin.accent],
   )
 
   return (
-    <div className="h-full w-full">
+    <div className="h-full w-full bg-constellation">
       <ReactFlow
         nodes={nodes}
         edges={flowEdges}
         nodeTypes={nodeTypes}
         fitView
-        fitViewOptions={{ padding: 0.2 }}
-        minZoom={0.2}
-        maxZoom={1.6}
+        fitViewOptions={{ padding: 0.25 }}
+        minZoom={0.15}
+        maxZoom={1.75}
         onPaneClick={() => onSelect(null)}
         onNodeClick={(_, node) => onSelect(node.id)}
         proOptions={{ hideAttribution: true }}
       >
-        <Background color="#c9a22755" gap={28} />
-        <Controls showInteractive={false} />
+        <Background color="rgba(201, 162, 39, 0.25)" gap={32} size={1.5} />
+        <Controls showInteractive={false} position="bottom-left" />
         <MiniMap
           nodeColor={miniFill}
-          maskColor="rgba(42,24,16,0.18)"
+          maskColor="rgba(25, 16, 12, 0.25)"
+          position="bottom-right"
           pannable
           zoomable
         />

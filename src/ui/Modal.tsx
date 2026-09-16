@@ -27,7 +27,7 @@ export function Modal({
     <div className="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center">
       <button
         type="button"
-        className="fixed inset-0 bg-ink/60 backdrop-blur-md transition-opacity duration-300"
+        className="fixed inset-0 bg-black/30 backdrop-blur-md transition-opacity duration-200"
         aria-label="Close dialog"
         onClick={onClose}
       />
@@ -35,16 +35,16 @@ export function Modal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
-        className="relative z-10 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-3xl border border-gold/30 bg-cream/95 p-7 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.4)] backdrop-blur-xl transition-all duration-300 dark:border-gold/25 dark:bg-[#18100c]/95 dark:text-cream"
+        className="relative z-10 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-3xl border border-black/[0.08] bg-white p-7 shadow-craft-lg transition-all duration-200 dark:border-white/[0.09] dark:bg-[#16161c] dark:text-white"
       >
-        <div className="mb-5 flex items-center justify-between border-b border-gold/15 pb-4">
-          <h2 id="modal-title" className="font-display text-2xl font-bold tracking-tight text-ink dark:text-cream">
+        <div className="mb-5 flex items-center justify-between border-b border-black/[0.06] pb-4 dark:border-white/[0.06]">
+          <h2 id="modal-title" className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white">
             {title}
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-ink/10 text-xs text-ink/60 transition-all hover:border-gold hover:text-maroon dark:border-cream/10 dark:text-cream/60 dark:hover:border-gold dark:hover:text-gold"
+            className="flex h-7 w-7 items-center justify-center rounded-full bg-neutral-100 text-xs text-neutral-500 transition-colors hover:bg-neutral-200 hover:text-neutral-900 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-white cursor-pointer"
             aria-label="Close modal"
           >
             ✕

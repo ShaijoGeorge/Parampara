@@ -10,59 +10,48 @@ export function SiteHeader({
   onTheme: (theme: ThemeMode) => void
 }) {
   const linkClass = ({ isActive }: { isActive: boolean }) =>
-    `relative rounded-full px-4 py-1.5 text-xs font-semibold tracking-wider transition-all duration-200 uppercase ${
+    `rounded-full px-3.5 py-1.5 text-xs font-medium transition-all duration-150 ${
       isActive
-        ? 'bg-gradient-to-r from-maroon to-maroon-dark text-cream border border-gold/40 shadow-xs'
-        : 'text-ink/75 hover:text-maroon hover:bg-gold/10 dark:text-cream/75 dark:hover:text-gold-light dark:hover:bg-cream/5'
+        ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-xs'
+        : 'text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100/80 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800/80'
     }`
 
   return (
-    <header className="no-print sticky top-0 z-40 border-b border-gold/20 bg-cream/85 backdrop-blur-xl transition-colors duration-300 dark:border-gold/15 dark:bg-[#140e0c]/90">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
-        {/* Brand Crest */}
-        <Link to="/" className="group flex items-center gap-3">
-          <div className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-gold-light via-saffron to-maroon p-[1.5px] shadow-[0_4px_16px_rgba(201,162,39,0.35)] transition-transform duration-300 group-hover:scale-105">
-            <div className="flex h-full w-full items-center justify-center rounded-2xl bg-cream/90 backdrop-blur-xs transition-colors dark:bg-[#19100c]/90">
-              <span className="font-display text-xl font-black text-maroon dark:text-gold-light">
-                प
-              </span>
-            </div>
+    <header className="no-print sticky top-4 z-50 mx-auto w-full max-w-4xl px-4 transition-all duration-200">
+      <div className="flex h-13 items-center justify-between rounded-full border border-black/[0.08] bg-white/85 px-3 py-1.5 shadow-craft-md backdrop-blur-xl transition-colors dark:border-white/[0.1] dark:bg-[#121217]/85">
+        {/* Brand */}
+        <Link to="/" className="group flex items-center gap-2.5 pl-1.5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-700 text-sm font-bold text-white shadow-xs transition-transform duration-200 group-hover:scale-105">
+            प
           </div>
-          <div className="flex flex-col">
-            <span className="font-display text-xl font-bold tracking-tight text-ink dark:text-cream">
-              Parampara
-            </span>
-            <span className="text-[10px] font-medium tracking-[0.2em] text-maroon uppercase dark:text-gold">
-              Royal Lineage Studio
-            </span>
-          </div>
+          <span className="font-sans text-sm font-semibold tracking-tight text-neutral-900 dark:text-white">
+            Parampara
+          </span>
         </Link>
 
-        {/* Navigation & Controls */}
-        <nav className="flex items-center gap-2 sm:gap-3">
-          <div className="hidden items-center gap-1 sm:flex">
-            <NavLink to="/trees" className={linkClass}>
-              Studio
-            </NavLink>
-            <NavLink to="/about" className={linkClass}>
-              Heritage
-            </NavLink>
-            <NavLink to="/playground" className={linkClass}>
-              Atelier
-            </NavLink>
-          </div>
+        {/* Center Nav */}
+        <nav className="flex items-center gap-1">
+          <NavLink to="/trees" className={linkClass}>
+            Studio
+          </NavLink>
+          <NavLink to="/about" className={linkClass}>
+            About
+          </NavLink>
+          <NavLink to="/playground" className={linkClass}>
+            Components
+          </NavLink>
+        </nav>
 
-          <div className="h-4 w-px bg-gold/25" />
-
+        {/* Right CTA & Theme */}
+        <div className="flex items-center gap-2 pr-1">
           <Link
             to="/trees"
-            className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-gold-light via-gold to-gold-dark px-3.5 py-1.5 text-xs font-bold tracking-wider text-ink uppercase shadow-[0_4px_16px_rgba(201,162,39,0.3)] transition-all duration-200 hover:brightness-110 active:scale-95"
+            className="hidden sm:inline-flex items-center justify-center rounded-full bg-neutral-900 px-3.5 py-1.5 text-xs font-medium text-white shadow-xs transition-all hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200 active:scale-95"
           >
             + New Tree
           </Link>
-
           <ThemeToggle theme={theme} onChange={onTheme} />
-        </nav>
+        </div>
       </div>
     </header>
   )
@@ -70,82 +59,37 @@ export function SiteHeader({
 
 export function SiteFooter() {
   return (
-    <footer className="no-print relative border-t border-gold/20 bg-cream/40 px-4 py-12 text-sm text-ink/70 backdrop-blur-md dark:border-gold/15 dark:bg-[#100a07] dark:text-cream/70">
-      <div className="mx-auto max-w-6xl">
-        <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-gradient-to-br from-gold to-maroon text-xs font-bold text-cream">
-                प
-              </div>
-              <span className="font-display text-lg font-bold text-ink dark:text-cream">
-                Parampara
-              </span>
+    <footer className="no-print border-t border-black/[0.06] bg-white/50 px-4 py-12 text-xs text-neutral-500 backdrop-blur-md dark:border-white/[0.06] dark:bg-[#0c0c10]/50 dark:text-neutral-400">
+      <div className="mx-auto max-w-4xl space-y-8">
+        <div className="flex flex-wrap items-center justify-between gap-6">
+          <div className="flex items-center gap-2">
+            <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-indigo-600 text-xs font-bold text-white">
+              प
             </div>
-            <p className="text-xs leading-relaxed text-ink/65 dark:text-cream/65">
-              Honoring origins, kinship, and ancestors. A sovereign lineage canvas crafted with royal archival aesthetics.
-            </p>
+            <span className="font-semibold text-neutral-900 dark:text-white">Parampara</span>
+            <span className="text-neutral-400 dark:text-neutral-600">·</span>
+            <span>Client-First Family Trees</span>
           </div>
 
-          <div>
-            <p className="font-display text-xs font-bold tracking-widest text-maroon uppercase dark:text-gold">
-              Navigation
-            </p>
-            <ul className="mt-3 space-y-2 text-xs">
-              <li>
-                <Link to="/trees" className="hover:text-maroon dark:hover:text-gold">
-                  Family Trees Studio
-                </Link>
-              </li>
-              <li>
-                <Link to="/about" className="hover:text-maroon dark:hover:text-gold">
-                  About & Philosophy
-                </Link>
-              </li>
-              <li>
-                <Link to="/playground" className="hover:text-maroon dark:hover:text-gold">
-                  UI Kit & Silhouettes
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <p className="font-display text-xs font-bold tracking-widest text-maroon uppercase dark:text-gold">
-              Sovereignty
-            </p>
-            <ul className="mt-3 space-y-2 text-xs">
-              <li>
-                <Link to="/privacy" className="hover:text-maroon dark:hover:text-gold">
-                  Local-First Privacy
-                </Link>
-              </li>
-              <li>
-                <span className="text-ink/60 dark:text-cream/60">
-                  Zero Cloud Sync in v1
-                </span>
-              </li>
-              <li>
-                <span className="text-ink/60 dark:text-cream/60">
-                  Browser IndexedDB Sealed
-                </span>
-              </li>
-            </ul>
-          </div>
-
-          <div className="rounded-2xl border border-gold/25 bg-gold/5 p-4">
-            <p className="text-xs font-semibold text-saffron-ink dark:text-gold-light">
-              🛡️ Sovereign Device Storage
-            </p>
-            <p className="mt-1 text-[11px] leading-relaxed text-ink/60 dark:text-cream/60">
-              Your portraits and ancestry never leave this browser. Export regular JSON archives for safe keeping.
-            </p>
+          <div className="flex items-center gap-5">
+            <Link to="/trees" className="hover:text-neutral-900 dark:hover:text-white transition-colors">
+              Studio
+            </Link>
+            <Link to="/about" className="hover:text-neutral-900 dark:hover:text-white transition-colors">
+              About
+            </Link>
+            <Link to="/privacy" className="hover:text-neutral-900 dark:hover:text-white transition-colors">
+              Privacy
+            </Link>
+            <Link to="/playground" className="hover:text-neutral-900 dark:hover:text-white transition-colors">
+              UI Kit
+            </Link>
           </div>
         </div>
 
-        <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-gold/15 pt-6 text-xs text-ink/50 dark:text-cream/50">
-          <p>© {new Date().getFullYear()} Parampara Family Tree Studio. Built by Shaijo George.</p>
-          <p className="font-serif italic">Tradition, drawn by hand.</p>
+        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-black/[0.04] pt-6 dark:border-white/[0.04] text-[11px] text-neutral-400 dark:text-neutral-500">
+          <p>© {new Date().getFullYear()} Parampara. Stored securely on your device.</p>
+          <p>Designed with Craft-grade simplicity.</p>
         </div>
       </div>
     </footer>

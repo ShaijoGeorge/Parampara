@@ -14,13 +14,13 @@ export function ThemeToggle({
     <button
       type="button"
       onClick={() => onChange(next)}
-      className="group relative flex h-9 w-9 items-center justify-center rounded-full border border-gold/30 bg-white/60 text-ink shadow-xs backdrop-blur-sm transition-all duration-300 hover:border-gold hover:shadow-md dark:border-gold/25 dark:bg-ink/60 dark:text-cream dark:hover:border-gold-light cursor-pointer active:scale-95"
+      className="group relative flex h-8 w-8 items-center justify-center rounded-full border border-black/[0.06] bg-neutral-100/80 text-neutral-700 transition-all hover:bg-neutral-200 dark:border-white/[0.08] dark:bg-neutral-800/80 dark:text-neutral-300 dark:hover:bg-neutral-700 cursor-pointer active:scale-95"
       aria-label={`Switch to ${next} theme`}
       title={`Switch to ${next} mode`}
     >
       {isDark ? (
         <svg
-          className="h-4 w-4 text-gold-light transition-transform duration-300 group-hover:-rotate-12"
+          className="h-3.5 w-3.5 text-amber-400 transition-transform duration-200 group-hover:-rotate-12"
           fill="none"
           stroke="currentColor"
           strokeWidth="2"
@@ -34,7 +34,7 @@ export function ThemeToggle({
         </svg>
       ) : (
         <svg
-          className="h-4 w-4 text-saffron transition-transform duration-300 group-hover:rotate-45"
+          className="h-3.5 w-3.5 text-neutral-600 transition-transform duration-200 group-hover:rotate-45"
           fill="none"
           stroke="currentColor"
           strokeWidth="2"

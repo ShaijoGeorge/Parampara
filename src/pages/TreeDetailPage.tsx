@@ -99,7 +99,7 @@ export function TreeDetailPage() {
     const newPerson: Person = {
       id: crypto.randomUUID(),
       treeId: bundle.tree.id,
-      givenName: 'New Ancestor',
+      givenName: 'New Member',
       familyName: '',
       gender: 'unspecified',
       livingPlace: '',
@@ -153,13 +153,13 @@ export function TreeDetailPage() {
 
   if (loading) {
     return (
-      <main className="flex min-h-[75vh] items-center justify-center bg-constellation">
-        <div className="flex flex-col items-center gap-4 rounded-3xl border border-gold/30 bg-cream/80 p-8 shadow-xl backdrop-blur-xl dark:bg-ink/80">
-          <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-gold via-saffron to-maroon text-2xl font-black text-cream shadow-md animate-pulse">
+      <main className="flex min-h-[75vh] items-center justify-center bg-[#f9f9fb] dark:bg-[#09090b]">
+        <div className="flex flex-col items-center gap-3 rounded-2xl border border-black/[0.08] dark:border-white/[0.08] bg-white/80 dark:bg-[#141419]/80 p-8 shadow-craft-md backdrop-blur-xl">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600 text-white font-bold animate-pulse">
             प
           </div>
-          <p className="font-display text-lg font-bold tracking-wide text-ink dark:text-cream">
-            Unrolling Sacred Lineage Canvas...
+          <p className="text-xs font-semibold tracking-tight text-neutral-600 dark:text-neutral-300">
+            Opening Canvas...
           </p>
         </div>
       </main>
@@ -170,15 +170,15 @@ export function TreeDetailPage() {
     return (
       <main className="mx-auto max-w-xl px-4 py-24 text-center">
         <Card>
-          <h1 className="font-display text-4xl font-bold text-ink dark:text-cream">
+          <h1 className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white">
             Tree Archive Not Found
           </h1>
-          <p className="mt-3 text-sm text-ink/70 dark:text-cream/70">
-            This family tree may have been removed or does not exist in this browser's IndexedDB storage.
+          <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
+            This family tree may have been deleted or does not exist in this browser's local IndexedDB.
           </p>
           <div className="mt-6">
             <Link to="/trees">
-              <Button>Return to Studio</Button>
+              <Button variant="primary" size="md">Return to Studio</Button>
             </Link>
           </div>
         </Card>
@@ -191,33 +191,33 @@ export function TreeDetailPage() {
   const isRoot = bundle.tree.rootPersonId === selectedPersonId
 
   return (
-    <div className="relative flex h-[calc(100vh-4.25rem)] flex-col overflow-hidden bg-[#faf7f2] dark:bg-[#120b08]">
-      {/* Archival Print Certificate Banner (Visible only in print) */}
-      <div className="hidden print:block text-center py-6 border-b-2 border-gold mb-6">
-        <p className="text-xs uppercase tracking-[0.3em] text-gold-dark font-semibold">
+    <div className="relative flex h-[calc(100vh-4.25rem)] flex-col overflow-hidden bg-[#f9f9fb] dark:bg-[#09090b] transition-colors duration-300">
+      {/* Archival Print Certificate Banner (Print Only) */}
+      <div className="hidden print:block text-center py-6 border-b border-black mb-6">
+        <p className="text-xs uppercase tracking-[0.2em] font-semibold text-neutral-500">
           Parampara Sovereign Genealogy Archive
         </p>
-        <h1 className="font-display text-3xl font-bold mt-1 text-maroon">{bundle.tree.name}</h1>
-        <p className="text-xs text-ink/60 mt-1 italic">
+        <h1 className="text-3xl font-bold mt-1 text-black">{bundle.tree.name}</h1>
+        <p className="text-xs text-neutral-600 mt-1">
           Preserved & printed on {new Date().toLocaleDateString('en-US', { dateStyle: 'long' })}
         </p>
       </div>
 
       {/* Floating Studio HUD Top Bar */}
-      <header className="no-print z-20 flex flex-wrap items-center justify-between gap-3 border-b border-gold/20 bg-cream/90 px-4 py-2.5 backdrop-blur-xl shadow-xs dark:border-gold/15 dark:bg-[#18100c]/90">
+      <header className="no-print z-20 flex flex-wrap items-center justify-between gap-3 border-b border-black/[0.06] dark:border-white/[0.06] bg-white/80 dark:bg-[#141419]/80 px-4 py-2.5 backdrop-blur-xl shadow-craft-xs">
         <div className="flex items-center gap-3">
           <Link
             to="/trees"
-            className="flex items-center gap-1.5 rounded-full border border-gold/25 bg-white/60 px-3 py-1 text-xs font-semibold text-ink/80 transition-all hover:border-gold hover:text-maroon hover:shadow-xs dark:border-gold/20 dark:bg-ink/60 dark:text-cream/80 dark:hover:text-gold"
+            className="flex items-center gap-1 rounded-full border border-black/[0.08] dark:border-white/[0.08] bg-white/70 dark:bg-[#181820]/70 px-3 py-1 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/5 transition-all"
           >
-            ← Studio
+            ← Canvases
           </Link>
 
-          <div className="h-4 w-px bg-gold/30" />
+          <div className="h-4 w-px bg-black/[0.08] dark:bg-white/[0.08]" />
 
           {/* Tree Name with edit button */}
-          <div className="flex items-center gap-2">
-            <h1 className="font-display text-xl font-bold tracking-tight text-ink dark:text-cream">
+          <div className="flex items-center gap-1.5">
+            <h1 className="text-sm font-bold tracking-tight text-neutral-900 dark:text-white">
               {bundle.tree.name}
             </h1>
             <button
@@ -227,7 +227,7 @@ export function TreeDetailPage() {
                 setRenameError('')
                 setRenameModalOpen(true)
               }}
-              className="flex h-6 w-6 items-center justify-center rounded-full text-xs text-ink/40 transition hover:bg-gold/15 hover:text-maroon dark:text-cream/40 dark:hover:text-gold cursor-pointer"
+              className="flex h-5 w-5 items-center justify-center rounded-full text-xs text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition cursor-pointer"
               title="Rename tree"
             >
               ✎
@@ -238,14 +238,14 @@ export function TreeDetailPage() {
           <button
             type="button"
             onClick={() => setTemplateModalOpen(true)}
-            className="hidden sm:inline-flex items-center gap-2 rounded-full border border-gold/35 bg-gold/10 px-3.5 py-1 text-xs font-semibold text-ink transition-all hover:border-gold hover:shadow-xs dark:border-gold/25 dark:text-cream cursor-pointer"
+            className="hidden sm:inline-flex items-center gap-2 rounded-full border border-black/[0.08] dark:border-white/[0.08] bg-white/80 dark:bg-[#181820]/80 px-3 py-1 text-xs font-medium text-neutral-700 dark:text-neutral-300 hover:border-black/20 dark:hover:border-white/20 transition-all cursor-pointer shadow-craft-xs"
           >
             <span
-              className="h-2 w-2 rounded-full ring-2 ring-gold/40"
+              className="h-2 w-2 rounded-full ring-1 ring-black/10 dark:ring-white/10"
               style={{ backgroundColor: currentTemplate.accent }}
             />
-            {currentTemplate.name}
-            <span className="text-[10px] uppercase tracking-wider opacity-60">· {currentTemplate.tag}</span>
+            <span>{currentTemplate.name}</span>
+            <span className="text-[10px] uppercase tracking-wider text-neutral-400">· {currentTemplate.tag}</span>
           </button>
         </div>
 
@@ -254,27 +254,28 @@ export function TreeDetailPage() {
           {bundle.people.length > 0 && (
             <Button
               type="button"
-              variant="ghost"
-              className="!px-3.5 !py-1 text-xs font-semibold"
+              variant="secondary"
+              size="sm"
               onClick={() => void handleAddStandalonePerson()}
             >
-              + Ancestor
+              + Member
             </Button>
           )}
 
           <Button
             type="button"
             variant="ghost"
-            className="hidden sm:inline-flex !px-3.5 !py-1 text-xs font-semibold"
+            size="sm"
+            className="hidden sm:inline-flex"
             onClick={() => setTemplateModalOpen(true)}
           >
-            Silhouette
+            Perspective
           </Button>
 
           <Button
             type="button"
             variant="ghost"
-            className="!px-3.5 !py-1 text-xs font-semibold"
+            size="sm"
             onClick={() => void handleExport()}
             title="Export JSON backup archive"
           >
@@ -283,8 +284,8 @@ export function TreeDetailPage() {
 
           <Button
             type="button"
-            variant="gold"
-            className="!px-4 !py-1 text-xs font-bold"
+            variant="primary"
+            size="sm"
             onClick={() => window.print()}
             title="Print Archival Poster or save PDF"
           >
@@ -307,52 +308,55 @@ export function TreeDetailPage() {
         {/* Empty Lineage Callout */}
         {bundle.people.length === 0 && (
           <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center p-4">
-            <Card className="pointer-events-auto max-w-md text-center border-gold/40 shadow-2xl p-8">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-gold-light via-saffron to-maroon text-3xl font-black text-cream shadow-lg">
+            <Card className="pointer-events-auto max-w-md text-center p-8 shadow-craft-lg">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-neutral-100 dark:bg-neutral-800 text-2xl font-bold text-neutral-800 dark:text-neutral-200">
                 प
               </div>
-              <h2 className="font-display text-3xl font-bold text-ink dark:text-cream">
-                Begin Your Dynasty
+              <h2 className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white">
+                Begin Your Lineage
               </h2>
-              <p className="mt-2 text-sm text-ink/70 leading-relaxed dark:text-cream/70">
-                Every grand lineage begins with a single name. Add your earliest known ancestor, or load our heritage sample family to experience the four canvas silhouettes.
+              <p className="mt-2 text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                Add your earliest known ancestor to start branching kinship, or load our Kerala heritage sample family to experience the four layout perspectives.
               </p>
-              <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <div className="mt-6 flex flex-wrap justify-center gap-2.5">
                 <Button
                   type="button"
+                  variant="primary"
+                  size="md"
                   onClick={() => void handleAddStandalonePerson()}
                 >
-                  Add Earliest Ancestor
+                  + Add First Member
                 </Button>
                 <Button
                   type="button"
                   variant="secondary"
+                  size="md"
                   onClick={() => void handleAddFirstPerson()}
                 >
-                  Load Sample Family
+                  Load Sample Lineage
                 </Button>
               </div>
             </Card>
           </div>
         )}
 
-        {/* Genealogy Atelier (Sliding Inspector Drawer) */}
+        {/* Craft Slide-Over Sheet (Inspector Drawer) */}
         {selectedPerson && (
-          <aside className="no-print absolute top-3 right-3 bottom-3 z-20 flex w-full max-w-md flex-col rounded-3xl border border-gold/30 bg-cream/95 p-5 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.35)] backdrop-blur-2xl transition-all duration-300 dark:border-gold/20 dark:bg-[#18100c]/95">
-            {/* Atelier Drawer Header */}
-            <div className="mb-4 flex items-center justify-between border-b border-gold/20 pb-3.5">
+          <aside className="no-print absolute top-3 right-3 bottom-3 z-20 flex w-full max-w-md flex-col rounded-3xl border border-black/[0.08] dark:border-white/[0.08] bg-white/95 dark:bg-[#141419]/95 p-5 shadow-craft-lg backdrop-blur-2xl transition-all duration-300">
+            {/* Drawer Header */}
+            <div className="mb-4 flex items-center justify-between border-b border-black/[0.06] dark:border-white/[0.06] pb-3.5">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-gold to-maroon text-cream font-serif font-bold shadow-xs">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 font-bold text-sm shadow-xs ring-1 ring-black/5 dark:ring-white/10">
                   {selectedPerson.givenName?.[0] || '—'}
                 </div>
                 <div>
-                  <h3 className="font-serif text-lg font-bold text-ink dark:text-cream truncate max-w-[200px]">
+                  <h3 className="text-sm font-bold tracking-tight text-neutral-900 dark:text-white truncate max-w-[200px]">
                     {displayName(selectedPerson)}
                   </h3>
                   <div className="flex items-center gap-1.5 mt-0.5">
-                    {isRoot && <Badge>Tree Root</Badge>}
+                    {isRoot && <Badge variant="accent">Central Root</Badge>}
                     {selectedPerson.isLate && (
-                      <span className="rounded-full border border-gold/30 bg-gold/10 px-2 py-0.5 text-[10px] font-bold text-maroon uppercase dark:text-gold-light">
+                      <span className="rounded-full bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 text-[9px] font-medium text-neutral-500 dark:text-neutral-400">
                         Late
                       </span>
                     )}
@@ -363,7 +367,7 @@ export function TreeDetailPage() {
               <button
                 type="button"
                 onClick={() => setSelectedPersonId(null)}
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-ink/10 text-xs text-ink/60 transition hover:border-gold hover:text-maroon dark:border-cream/10 dark:text-cream/60 dark:hover:text-gold cursor-pointer"
+                className="flex h-7 w-7 items-center justify-center rounded-full border border-black/[0.08] dark:border-white/[0.08] text-xs text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition cursor-pointer"
                 aria-label="Close inspector"
               >
                 ✕
@@ -371,36 +375,36 @@ export function TreeDetailPage() {
             </div>
 
             {/* Quick Kinship Connectors */}
-            <div className="mb-4 space-y-2 rounded-2xl border border-gold/20 bg-gold/5 p-3.5">
-              <p className="text-[11px] font-bold tracking-widest text-maroon uppercase dark:text-gold">
+            <div className="mb-4 space-y-2 rounded-2xl border border-black/[0.06] dark:border-white/[0.06] bg-black/[0.02] dark:bg-white/[0.02] p-3.5">
+              <p className="text-[11px] font-semibold tracking-wider text-neutral-500 uppercase">
                 Attach Kin to {selectedPerson.givenName || 'member'}
               </p>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
                   onClick={() => void handleAddRelative('parent')}
-                  className="flex items-center justify-center gap-1.5 rounded-xl border border-maroon/20 bg-white/70 py-2 text-xs font-semibold text-maroon transition hover:bg-maroon hover:text-cream dark:border-gold/20 dark:bg-ink/50 dark:text-gold-light dark:hover:bg-maroon cursor-pointer"
+                  className="flex items-center justify-center gap-1.5 rounded-xl border border-black/[0.08] dark:border-white/[0.08] bg-white dark:bg-[#1c1c24] py-2 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:border-indigo-500 dark:hover:border-indigo-400 transition cursor-pointer shadow-craft-xs"
                 >
                   + Add Parent
                 </button>
                 <button
                   type="button"
                   onClick={() => void handleAddRelative('spouse')}
-                  className="flex items-center justify-center gap-1.5 rounded-xl border border-gold/30 bg-white/70 py-2 text-xs font-semibold text-saffron-ink transition hover:bg-gold hover:text-ink dark:border-gold/20 dark:bg-ink/50 dark:text-gold-light dark:hover:bg-gold dark:hover:text-ink cursor-pointer"
+                  className="flex items-center justify-center gap-1.5 rounded-xl border border-black/[0.08] dark:border-white/[0.08] bg-white dark:bg-[#1c1c24] py-2 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:border-rose-500 transition cursor-pointer shadow-craft-xs"
                 >
                   + Add Spouse
                 </button>
                 <button
                   type="button"
                   onClick={() => void handleAddRelative('child')}
-                  className="flex items-center justify-center gap-1.5 rounded-xl border border-teal/25 bg-white/70 py-2 text-xs font-semibold text-teal transition hover:bg-teal hover:text-cream dark:border-teal/20 dark:bg-ink/50 dark:text-teal dark:hover:bg-teal dark:hover:text-cream cursor-pointer"
+                  className="flex items-center justify-center gap-1.5 rounded-xl border border-black/[0.08] dark:border-white/[0.08] bg-white dark:bg-[#1c1c24] py-2 text-xs font-semibold text-teal-600 dark:text-teal-400 hover:border-teal-500 transition cursor-pointer shadow-craft-xs"
                 >
                   + Add Child
                 </button>
                 <button
                   type="button"
                   onClick={() => void handleAddRelative('sibling')}
-                  className="flex items-center justify-center gap-1.5 rounded-xl border border-saffron/25 bg-white/70 py-2 text-xs font-semibold text-saffron transition hover:bg-saffron hover:text-cream dark:border-saffron/20 dark:bg-ink/50 dark:text-saffron-light dark:hover:bg-saffron cursor-pointer"
+                  className="flex items-center justify-center gap-1.5 rounded-xl border border-black/[0.08] dark:border-white/[0.08] bg-white dark:bg-[#1c1c24] py-2 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:border-indigo-500 transition cursor-pointer shadow-craft-xs"
                 >
                   + Add Sibling
                 </button>
@@ -410,9 +414,9 @@ export function TreeDetailPage() {
                 <button
                   type="button"
                   onClick={() => void handleSetRoot()}
-                  className="mt-1 flex w-full items-center justify-center gap-1 rounded-xl py-1 text-xs font-medium text-maroon hover:underline dark:text-gold cursor-pointer"
+                  className="mt-1 flex w-full items-center justify-center gap-1 rounded-xl py-1 text-xs font-medium text-neutral-500 hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer transition"
                 >
-                  👑 Set as Central Tree Root
+                  ★ Set as Central Tree Root
                 </button>
               )}
             </div>
@@ -447,11 +451,11 @@ export function TreeDetailPage() {
       {/* Silhouette Switcher Modal */}
       <Modal
         open={templateModalOpen}
-        title="Canvas Silhouette & Cloth"
+        title="Canvas Perspectives"
         onClose={() => setTemplateModalOpen(false)}
       >
-        <p className="mb-4 text-xs leading-relaxed text-ink/70 dark:text-cream/70">
-          Transform your genealogical projection instantly. Your family ties remain identical across every silhouette.
+        <p className="mb-4 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
+          Transform your genealogy canvas layout instantly. Your family data remains identical across every perspective.
         </p>
         <TemplateGallery
           current={bundle.tree.templateId}
@@ -462,7 +466,7 @@ export function TreeDetailPage() {
       {/* Rename Tree Modal */}
       <Modal
         open={renameModalOpen}
-        title="Rename Family Archive"
+        title="Rename Tree Archive"
         onClose={() => setRenameModalOpen(false)}
       >
         <div className="space-y-4">
@@ -472,13 +476,13 @@ export function TreeDetailPage() {
             placeholder="e.g., The Travancore Lineage"
             autoFocus
           />
-          {renameError && <p className="text-xs text-maroon">{renameError}</p>}
+          {renameError && <p className="text-xs text-rose-500">{renameError}</p>}
           <div className="flex justify-end gap-2 pt-2">
-            <Button type="button" variant="ghost" onClick={() => setRenameModalOpen(false)}>
+            <Button type="button" variant="ghost" size="md" onClick={() => setRenameModalOpen(false)}>
               Cancel
             </Button>
-            <Button type="button" onClick={() => void handleRename()}>
-              Save Archive Name
+            <Button type="button" variant="primary" size="md" onClick={() => void handleRename()}>
+              Save Title
             </Button>
           </div>
         </div>

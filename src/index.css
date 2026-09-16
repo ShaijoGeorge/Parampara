@@ -2,26 +2,21 @@
 @import "@xyflow/react/dist/style.css";
 
 @theme {
-  --color-maroon: #7d1634;
-  --color-maroon-dark: #4a091d;
-  --color-maroon-light: #9c2146;
-  --color-saffron: #d96f32;
-  --color-saffron-light: #f38f53;
-  --color-saffron-ink: #6d3311;
-  --color-teal: #0c6b65;
-  --color-teal-ink: #073834;
-  --color-gold: #c9a227;
-  --color-gold-light: #f5d676;
-  --color-gold-dark: #917210;
-  --color-cream: #fdfbf7;
-  --color-vellum: #f7f2e5;
-  --color-ink: #19100c;
-  --color-ink-deep: #0e0806;
-  --color-charcoal: #231915;
+  --color-craft-bg: #f9f9fb;
+  --color-craft-surface: #ffffff;
+  --color-craft-card: #ffffff;
+  --color-craft-border: rgba(0, 0, 0, 0.07);
+  --color-craft-text: #111114;
+  --color-craft-muted: #6e6e7a;
+  --color-craft-subtle: #f1f1f5;
+  --color-craft-indigo: #5e4df5;
+  --color-craft-coral: #ff5f57;
+  --color-craft-emerald: #10b981;
+  --color-craft-amber: #f59e0b;
 
-  --font-display: 'Cinzel', serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif;
+  --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif;
   --font-serif: 'Playfair Display', Georgia, serif;
-  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 }
 
 :root {
@@ -31,19 +26,67 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background-color: var(--color-cream);
-  color: var(--color-ink);
+  background-color: #f9f9fb;
+  color: #111114;
   font-family: var(--font-sans);
+  letter-spacing: -0.015em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 .dark body {
-  background-color: var(--color-ink-deep);
-  color: var(--color-cream);
+  background-color: #09090b;
+  color: #f5f5f7;
 }
 
-/* Custom Archival Scrollbars */
+/* Craft-Style Multi-Stage Soft Shadows */
+.shadow-craft-sm {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.shadow-craft-md {
+  box-shadow: 0 10px 30px -4px rgba(0, 0, 0, 0.06), 0 2px 8px -1px rgba(0, 0, 0, 0.04);
+}
+
+.dark .shadow-craft-md {
+  box-shadow: 0 12px 36px -4px rgba(0, 0, 0, 0.5), 0 2px 10px -1px rgba(0, 0, 0, 0.3);
+}
+
+.shadow-craft-lg {
+  box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.09), 0 4px 16px -2px rgba(0, 0, 0, 0.03);
+}
+
+.dark .shadow-craft-lg {
+  box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.6), 0 4px 16px -2px rgba(0, 0, 0, 0.4);
+}
+
+/* Subtle Canvas Dot Grid */
+.bg-craft-dots {
+  background-image: radial-gradient(#e4e4ea 1.2px, transparent 1.2px);
+  background-size: 24px 24px;
+}
+
+.dark .bg-craft-dots {
+  background-image: radial-gradient(#22222a 1.2px, transparent 1.2px);
+  background-size: 24px 24px;
+}
+
+/* Frosted Glass Floating Navbar */
+.craft-glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+.dark .craft-glass {
+  background: rgba(18, 18, 23, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+/* Sleek Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -54,122 +97,88 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(201, 162, 39, 0.3);
+  background: rgba(0, 0, 0, 0.15);
   border-radius: 9999px;
 }
 
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+}
+
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(201, 162, 39, 0.6);
+  background: rgba(0, 0, 0, 0.3);
 }
 
-/* Luxury Glassmorphism & Gold Highlights */
-.glass-panel {
-  background: rgba(253, 251, 247, 0.85);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(125, 22, 52, 0.12);
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
-.dark .glass-panel {
-  background: rgba(25, 16, 12, 0.85);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(245, 214, 118, 0.14);
-}
-
-.gold-border-glow {
-  box-shadow: 0 0 25px -5px rgba(201, 162, 39, 0.25);
-}
-
-.dark .gold-border-glow {
-  box-shadow: 0 0 35px -5px rgba(245, 214, 118, 0.2);
-}
-
-/* Constellation grid for canvas and hero */
-.bg-constellation {
-  background-image: radial-gradient(rgba(125, 22, 52, 0.08) 1.2px, transparent 1.2px),
-    radial-gradient(rgba(201, 162, 39, 0.06) 1.2px, transparent 1.2px);
-  background-size: 32px 32px;
-  background-position: 0 0, 16px 16px;
-}
-
-.dark .bg-constellation {
-  background-image: radial-gradient(rgba(245, 214, 118, 0.1) 1.2px, transparent 1.2px),
-    radial-gradient(rgba(125, 22, 52, 0.15) 1.2px, transparent 1.2px);
-  background-size: 32px 32px;
-  background-position: 0 0, 16px 16px;
-}
-
-/* React Flow styling customization */
+/* React Flow Styling for Craft Canvas */
 .react-flow__attribution {
   display: none !important;
 }
 
 .react-flow__controls {
-  border-radius: 16px !important;
+  border-radius: 9999px !important;
   overflow: hidden !important;
-  box-shadow: 0 16px 40px -10px rgba(25, 16, 12, 0.2) !important;
-  border: 1px solid rgba(201, 162, 39, 0.25) !important;
-  background: rgba(253, 251, 247, 0.9) !important;
-  backdrop-filter: blur(12px) !important;
+  box-shadow: 0 10px 30px -4px rgba(0, 0, 0, 0.08) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(16px) !important;
 }
 
 .dark .react-flow__controls {
-  border-color: rgba(245, 214, 118, 0.25) !important;
-  background: rgba(25, 16, 12, 0.9) !important;
+  border-color: rgba(255, 255, 255, 0.09) !important;
+  background: rgba(18, 18, 23, 0.9) !important;
 }
 
 .react-flow__controls button {
-  border-bottom: 1px solid rgba(201, 162, 39, 0.15) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
   background: transparent !important;
-  fill: #19100c !important;
+  fill: #111114 !important;
   transition: all 0.15s ease !important;
 }
 
 .react-flow__controls button:hover {
-  background: rgba(201, 162, 39, 0.15) !important;
-  fill: #7d1634 !important;
+  background: rgba(0, 0, 0, 0.05) !important;
 }
 
 .dark .react-flow__controls button {
-  fill: #fdfbf7 !important;
-  border-bottom-color: rgba(245, 214, 118, 0.15) !important;
+  fill: #f5f5f7 !important;
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
 }
 
 .dark .react-flow__controls button:hover {
-  background: rgba(245, 214, 118, 0.15) !important;
-  fill: #f5d676 !important;
+  background: rgba(255, 255, 255, 0.08) !important;
 }
 
 .react-flow__minimap {
-  border-radius: 16px !important;
+  border-radius: 20px !important;
   overflow: hidden !important;
-  border: 1px solid rgba(201, 162, 39, 0.25) !important;
-  box-shadow: 0 16px 40px -10px rgba(25, 16, 12, 0.25) !important;
-  background: rgba(253, 251, 247, 0.85) !important;
-  backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 14px 40px -8px rgba(0, 0, 0, 0.1) !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(16px) !important;
 }
 
 .dark .react-flow__minimap {
-  background: rgba(14, 8, 6, 0.9) !important;
-  border-color: rgba(245, 214, 118, 0.25) !important;
+  background: rgba(15, 15, 19, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.09) !important;
 }
 
-/* Archival Certificate Print Mode */
+/* Print Optimization */
 @media print {
   .no-print {
     display: none !important;
   }
 
   body {
-    background: #fffdf9 !important;
-    color: #19100c !important;
+    background: #ffffff !important;
+    color: #111114 !important;
   }
 
   .react-flow__controls,
   .react-flow__minimap {
     display: none !important;
-  }
-
-  .react-flow__pane {
-    cursor: default !important;
   }
 }

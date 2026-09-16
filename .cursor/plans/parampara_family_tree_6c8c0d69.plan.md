@@ -4,49 +4,49 @@ overview: "Build Parampara as a premium client-first family-tree web app: Indexe
 todos:
   - id: step-1-scaffold
     content: Scaffold Vite React-TS + Tailwind + Router, folder layout, README, git init + initial commit
-    status: in_progress
+    status: completed
   - id: step-2-design-system
     content: Design tokens, typography, UI kit, dark/light, /playground
-    status: pending
+    status: completed
   - id: step-3-marketing
     content: Landing, about, privacy (data stays in browser)
-    status: pending
+    status: completed
   - id: step-4-dexie
     content: Domain types, Zod, DexieTreeRepository
-    status: pending
+    status: completed
   - id: step-5-tree-list
     content: "Multiple trees: create, rename, duplicate, delete"
-    status: pending
+    status: completed
   - id: step-6-member-form
     content: "Member editor: gender, relation, family name, children, place, late"
-    status: pending
+    status: completed
   - id: step-7-pedigree
     content: React Flow + ELK interactive pedigree
-    status: pending
+    status: completed
   - id: step-8-templates
     content: River, mandala, compact templates + gallery
-    status: pending
+    status: completed
   - id: step-9-photos
     content: Photos, late treatment, child slots
-    status: pending
+    status: completed
   - id: step-10-onboarding
     content: First-run tour and empty states
-    status: pending
+    status: completed
   - id: step-11-export-print
     content: JSON export/import and print/PDF
-    status: pending
+    status: completed
   - id: step-12-pwa
     content: vite-plugin-pwa install + offline shell
-    status: pending
+    status: completed
   - id: step-13-polish
     content: Mobile inspector, a11y, quota, dark mode fixes
-    status: pending
+    status: completed
   - id: step-14-sync-seam
     content: Repository docs + RemoteAdapter stub
-    status: pending
+    status: completed
   - id: step-15-deploy
     content: Cloudflare Pages or Vercel config
-    status: pending
+    status: completed
 isProject: false
 ---
 

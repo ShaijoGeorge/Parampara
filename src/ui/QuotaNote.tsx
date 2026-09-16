@@ -12,7 +12,7 @@ export function QuotaNote({
   return (
     <p
       role="status"
-      className="rounded-xl bg-maroon/10 px-3 py-2 text-sm text-maroon dark:bg-gold/10 dark:text-gold"
+      className="rounded-xl border border-amber-500/20 bg-amber-500/10 px-3 py-2 text-xs font-medium text-amber-700 dark:text-amber-300"
     >
       This browser is using {pct}% of its storage quota. Export a backup and
       remove unused photos if saves start failing.

@@ -23,7 +23,7 @@ function Layout() {
   }, [location.pathname])
 
   return (
-    <div className="flex min-h-screen flex-col bg-cream text-ink transition-colors duration-200 dark:bg-ink dark:text-cream">
+    <div className="flex min-h-screen flex-col bg-[#f9f9fb] text-neutral-900 transition-colors duration-200 dark:bg-[#09090b] dark:text-neutral-100">
       <SiteHeader theme={theme} onTheme={onTheme} />
       <div className="no-print mx-auto w-full max-w-6xl px-4 pt-2">
         <QuotaNote usage={quotaInfo.usage} quota={quotaInfo.quota} />

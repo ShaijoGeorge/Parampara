@@ -1,8 +1,9 @@
 import ELK from 'elkjs/lib/elk.bundled.js'
 import {
+  childrenOf,
   childrenOfUnit,
+  parentsOf,
   personById,
-  spousesOf,
   unitMembers,
 } from '../domain/graph'
 import type { Edge, Person, TemplateId } from '../domain/types'
@@ -13,141 +14,318 @@ export interface LaidOutNode {
   y: number
 }
 
-const NODE = { w: 248, h: 128 }
+export const NODE = { w: 260, h: 100 }
+const GAP_X = 40
+const GAP_Y = 100
+const SPOUSE_GAP = 20
 
 function unique(ids: string[]): string[] {
   return [...new Set(ids)]
 }
 
-function generations(
-  people: Person[],
-  edges: Edge[],
-  rootId: string | null,
-): Map<string, number> {
-  const gen = new Map<string, number>()
-  const start =
-    rootId && people.some((p) => p.id === rootId)
-      ? rootId
-      : (people[0]?.id ?? null)
-  if (!start) return gen
-  const queue: string[] = [start]
-  gen.set(start, 0)
-  while (queue.length) {
-    const id = queue.shift()
-    if (!id) break
-    const g = gen.get(id) ?? 0
-    for (const spouseId of spousesOf(id, edges)) {
-      if (!gen.has(spouseId)) {
-        gen.set(spouseId, g)
-        queue.push(spouseId)
-      }
-    }
-    for (const childId of childrenOfUnit(id, edges)) {
-      if (!gen.has(childId)) {
-        gen.set(childId, g + 1)
-        queue.push(childId)
-      }
-    }
-  }
-  for (const person of people) {
-    if (!gen.has(person.id)) gen.set(person.id, 99)
-  }
-  return gen
+// ---------------------------------------------------------------------------
+// 1. Classical Descendants (Top-Down Generational Tree)
+// ---------------------------------------------------------------------------
+interface SubtreeBox {
+  width: number
+  unitCenterX: number
+  positions: Map<string, { x: number; y: number }>
 }
 
-function layoutPedigree(
+function layoutSubtreeDown(
+  personId: string,
+  gen: number,
+  edges: Edge[],
+  people: Person[],
+  visited: Set<string>,
+): SubtreeBox {
+  const positions = new Map<string, { x: number; y: number }>()
+
+  // Gather unit members (person + spouses)
+  const unit = unique(unitMembers(personId, edges)).filter(
+    (id) => !visited.has(id) && people.some((p) => p.id === id),
+  )
+
+  if (unit.length === 0) {
+    return { width: NODE.w, unitCenterX: NODE.w / 2, positions }
+  }
+
+  for (const id of unit) visited.add(id)
+
+  const unitWidth = unit.length * NODE.w + (unit.length - 1) * SPOUSE_GAP
+
+  // Gather children of this union
+  const children = unique(childrenOfUnit(personId, edges)).filter(
+    (id) => !visited.has(id) && people.some((p) => p.id === id),
+  )
+
+  if (children.length === 0) {
+    unit.forEach((id, index) => {
+      positions.set(id, {
+        x: index * (NODE.w + SPOUSE_GAP),
+        y: gen * (NODE.h + GAP_Y),
+      })
+    })
+    return {
+      width: unitWidth,
+      unitCenterX: unitWidth / 2,
+      positions,
+    }
+  }
+
+  // Layout all child subtrees
+  const childBoxes: SubtreeBox[] = []
+  for (const childId of children) {
+    const box = layoutSubtreeDown(childId, gen + 1, edges, people, visited)
+    childBoxes.push(box)
+  }
+
+  // Calculate total children width
+  let totalChildWidth = 0
+  const childOffsets: number[] = []
+  childBoxes.forEach((box, i) => {
+    childOffsets.push(totalChildWidth)
+    totalChildWidth += box.width + (i < childBoxes.length - 1 ? GAP_X : 0)
+  })
+
+  // Center parents over children
+  const firstChildCenter = childOffsets[0]! + childBoxes[0]!.unitCenterX
+  const lastChildCenter =
+    childOffsets[childBoxes.length - 1]! + childBoxes[childBoxes.length - 1]!.unitCenterX
+  const childrenCenter = (firstChildCenter + lastChildCenter) / 2
+
+  let parentStartX = childrenCenter - unitWidth / 2
+  let childShiftX = 0
+
+  if (parentStartX < 0) {
+    childShiftX = -parentStartX
+    parentStartX = 0
+  }
+
+  const totalWidth = Math.max(parentStartX + unitWidth, totalChildWidth + childShiftX)
+
+  // Position parent unit
+  unit.forEach((id, index) => {
+    positions.set(id, {
+      x: parentStartX + index * (NODE.w + SPOUSE_GAP),
+      y: gen * (NODE.h + GAP_Y),
+    })
+  })
+
+  // Position children with shift
+  childBoxes.forEach((box, i) => {
+    const offsetX = childOffsets[i]! + childShiftX
+    for (const [id, pos] of box.positions) {
+      positions.set(id, {
+        x: pos.x + offsetX,
+        y: pos.y,
+      })
+    }
+  })
+
+  return {
+    width: totalWidth,
+    unitCenterX: parentStartX + unitWidth / 2,
+    positions,
+  }
+}
+
+function layoutDescendants(
   people: Person[],
   edges: Edge[],
   rootId: string | null,
-  compact: boolean,
-  axis: 'down' | 'right',
 ): LaidOutNode[] {
-  const gapX = compact ? 18 : 36
-  const gapY = compact ? 64 : 96
-  const spouseGap = compact ? 12 : 20
-  const placed = new Set<string>()
-  const positions = new Map<string, { x: number; y: number }>()
+  const visited = new Set<string>()
+  const allPositions = new Map<string, { x: number; y: number }>()
 
-  const placeUnit = (personId: string, gen: number, left: number): number => {
-    if (placed.has(personId)) return 0
-    const members = unique(unitMembers(personId, edges)).filter((id) =>
-      people.some((p) => p.id === id),
+  // Determine root ancestor: preferred rootId, or an ancestor with no parents
+  let primaryRoot = rootId && people.some((p) => p.id === rootId) ? rootId : null
+  if (!primaryRoot) {
+    const withoutParents = people.filter(
+      (p) => parentsOf(p.id, edges).length === 0,
     )
-    for (const id of members) placed.add(id)
-
-    const kids = childrenOfUnit(personId, edges).filter(
-      (id) => !placed.has(id) && people.some((p) => p.id === id),
-    )
-    let childWidth = 0
-    const childStarts: number[] = []
-    for (const kid of kids) {
-      const w = placeUnit(kid, gen + 1, left + childWidth)
-      childStarts.push(left + childWidth)
-      childWidth += w
-    }
-
-    const unitWidth = members.length * NODE.w + (members.length - 1) * spouseGap
-    const width = Math.max(unitWidth, childWidth, NODE.w)
-    const unitLeft = left + Math.max(0, (width - unitWidth) / 2)
-
-    members.forEach((id, index) => {
-      const x = unitLeft + index * (NODE.w + spouseGap)
-      const y = gen * (NODE.h + gapY)
-      positions.set(id, { x, y })
-    })
-
-    return width + gapX
+    primaryRoot = withoutParents[0]?.id ?? people[0]?.id ?? null
   }
 
-  const root =
-    rootId && people.some((p) => p.id === rootId)
-      ? rootId
-      : (people[0]?.id ?? null)
-  let cursor = 0
-  if (root) cursor += placeUnit(root, 0, 0)
+  let cursorX = 0
 
-  const leftovers = people.filter((p) => !placed.has(p.id))
+  if (primaryRoot) {
+    const box = layoutSubtreeDown(primaryRoot, 0, edges, people, visited)
+    for (const [id, pos] of box.positions) {
+      allPositions.set(id, { x: pos.x + cursorX, y: pos.y })
+    }
+    cursorX += box.width + GAP_X * 2
+  }
+
+  // Handle any remaining unattached components
+  const leftovers = people.filter((p) => !visited.has(p.id))
   for (const person of leftovers) {
-    cursor += placeUnit(person.id, 99, cursor)
+    if (visited.has(person.id)) continue
+    const box = layoutSubtreeDown(person.id, 0, edges, people, visited)
+    for (const [id, pos] of box.positions) {
+      allPositions.set(id, { x: pos.x + cursorX, y: pos.y })
+    }
+    cursorX += box.width + GAP_X * 2
   }
 
-  return people.map((person) => {
-    const pos = positions.get(person.id) ?? { x: cursor, y: 0 }
-    if (axis === 'right') {
-      return { id: person.id, x: pos.y, y: pos.x }
-    }
-    return { id: person.id, x: pos.x, y: pos.y }
+  return people.map((p) => {
+    const pos = allPositions.get(p.id) ?? { x: cursorX, y: 0 }
+    return { id: p.id, x: pos.x, y: pos.y }
   })
 }
 
-function layoutMandala(
+// ---------------------------------------------------------------------------
+// 2. Direct Ancestry Chart (Bottom-Up Pedigree)
+// ---------------------------------------------------------------------------
+function layoutAncestry(
   people: Person[],
   edges: Edge[],
   rootId: string | null,
 ): LaidOutNode[] {
-  const gen = generations(people, edges, rootId)
-  const buckets = new Map<number, string[]>()
-  for (const person of people) {
-    const g = gen.get(person.id) ?? 99
-    const list = buckets.get(g) ?? []
-    list.push(person.id)
-    buckets.set(g, list)
+  const visited = new Set<string>()
+  const positions = new Map<string, { x: number; y: number }>()
+
+  // Start with the focus person (root) at bottom
+  const focus =
+    rootId && people.some((p) => p.id === rootId)
+      ? rootId
+      : (people[people.length - 1]?.id ?? people[0]?.id ?? null)
+
+  if (!focus) return []
+
+  const layoutBranchUp = (
+    personId: string,
+    level: number,
+    centerX: number,
+    spread: number,
+  ) => {
+    if (visited.has(personId)) return
+    visited.add(personId)
+
+    const y = -level * (NODE.h + GAP_Y)
+    positions.set(personId, { x: centerX - NODE.w / 2, y })
+
+    const parents = parentsOf(personId, edges).filter((id) =>
+      people.some((p) => p.id === id),
+    )
+
+    if (parents.length === 1) {
+      layoutBranchUp(parents[0]!, level + 1, centerX, spread * 0.75)
+    } else if (parents.length >= 2) {
+      const nextSpread = Math.max(spread / 2, (NODE.w + GAP_X) / 2)
+      // Father on left, Mother on right
+      layoutBranchUp(parents[0]!, level + 1, centerX - nextSpread, nextSpread)
+      layoutBranchUp(parents[1]!, level + 1, centerX + nextSpread, nextSpread)
+    }
   }
-  const result: LaidOutNode[] = []
-  for (const [g, ids] of buckets) {
-    const radius = g === 0 || g === 99 ? (g === 0 ? 0 : 420 + ids.length * 8) : 170 + g * 210
-    ids.forEach((id, index) => {
-      const angle = (index / Math.max(ids.length, 1)) * Math.PI * 2 - Math.PI / 2
-      result.push({
-        id,
-        x: Math.cos(angle) * radius,
-        y: Math.sin(angle) * radius,
+
+  // Initial root placed at (0, 0)
+  layoutBranchUp(focus, 0, 0, (NODE.w + GAP_X) * 2.2)
+
+  // Layout any remaining people cleanly beside
+  let extraX = (NODE.w + GAP_X) * 3
+  const leftovers = people.filter((p) => !visited.has(p.id))
+  for (const person of leftovers) {
+    positions.set(person.id, { x: extraX, y: 0 })
+    extraX += NODE.w + GAP_X
+  }
+
+  return people.map((p) => {
+    const pos = positions.get(p.id) ?? { x: 0, y: 0 }
+    return { id: p.id, x: pos.x, y: pos.y }
+  })
+}
+
+// ---------------------------------------------------------------------------
+// 3. Balanced Hourglass (Focus Center: Ancestors Up, Descendants Down)
+// ---------------------------------------------------------------------------
+function layoutHourglass(
+  people: Person[],
+  edges: Edge[],
+  rootId: string | null,
+): LaidOutNode[] {
+  const visited = new Set<string>()
+  const positions = new Map<string, { x: number; y: number }>()
+
+  const focus =
+    rootId && people.some((p) => p.id === rootId)
+      ? rootId
+      : (people[0]?.id ?? null)
+
+  if (!focus) return []
+
+  // 1. Center Unit (Focus + Spouses) at Y = 0
+  const centerUnit = unique(unitMembers(focus, edges)).filter((id) =>
+    people.some((p) => p.id === id),
+  )
+  centerUnit.forEach((id) => visited.add(id))
+
+  const centerUnitWidth =
+    centerUnit.length * NODE.w + (centerUnit.length - 1) * SPOUSE_GAP
+  centerUnit.forEach((id, index) => {
+    positions.set(id, {
+      x: -centerUnitWidth / 2 + index * (NODE.w + SPOUSE_GAP),
+      y: 0,
+    })
+  })
+
+  // 2. Ancestors branch UPWARDS
+  const parents = parentsOf(focus, edges).filter((id) =>
+    people.some((p) => p.id === id),
+  )
+  if (parents.length === 1) {
+    visited.add(parents[0]!)
+    positions.set(parents[0]!, {
+      x: -NODE.w / 2,
+      y: -(NODE.h + GAP_Y),
+    })
+  } else if (parents.length >= 2) {
+    const spread = (NODE.w + GAP_X) * 0.75
+    visited.add(parents[0]!)
+    visited.add(parents[1]!)
+    positions.set(parents[0]!, {
+      x: -spread - NODE.w / 2,
+      y: -(NODE.h + GAP_Y),
+    })
+    positions.set(parents[1]!, {
+      x: spread - NODE.w / 2,
+      y: -(NODE.h + GAP_Y),
+    })
+  }
+
+  // 3. Descendants branch DOWNWARDS
+  const children = unique(childrenOf(focus, edges)).filter((id) =>
+    people.some((p) => p.id === id),
+  )
+  if (children.length > 0) {
+    const totalKidsWidth =
+      children.length * NODE.w + (children.length - 1) * GAP_X
+    children.forEach((childId, index) => {
+      visited.add(childId)
+      positions.set(childId, {
+        x: -totalKidsWidth / 2 + index * (NODE.w + GAP_X),
+        y: NODE.h + GAP_Y,
       })
     })
   }
-  return result
+
+  // 4. Place any remaining people
+  let cursorX = centerUnitWidth + GAP_X * 2
+  const leftovers = people.filter((p) => !visited.has(p.id))
+  for (const person of leftovers) {
+    positions.set(person.id, { x: cursorX, y: 0 })
+    cursorX += NODE.w + GAP_X
+  }
+
+  return people.map((p) => {
+    const pos = positions.get(p.id) ?? { x: 0, y: 0 }
+    return { id: p.id, x: pos.x, y: pos.y }
+  })
 }
 
+// ---------------------------------------------------------------------------
+// 4. Compact Clan Matrix (ELK Layered Orthogonal DAG)
+// ---------------------------------------------------------------------------
 async function layoutElk(
   people: Person[],
   edges: Edge[],
@@ -158,9 +336,10 @@ async function layoutElk(
     layoutOptions: {
       'elk.algorithm': 'layered',
       'elk.direction': 'DOWN',
-      'elk.layered.spacing.nodeNodeBetweenLayers': '72',
-      'elk.spacing.nodeNode': '28',
+      'elk.layered.spacing.nodeNodeBetweenLayers': '80',
+      'elk.spacing.nodeNode': '36',
       'elk.edgeRouting': 'ORTHOGONAL',
+      'elk.layered.nodePlacement.strategy': 'BRANDES_KOEPF',
     },
     children: people.map((person) => ({
       id: person.id,
@@ -173,6 +352,7 @@ async function layoutElk(
       targets: [edge.toId],
     })),
   })
+
   return (graph.children ?? []).map((child) => ({
     id: child.id,
     x: child.x ?? 0,
@@ -180,6 +360,9 @@ async function layoutElk(
   }))
 }
 
+// ---------------------------------------------------------------------------
+// Main Dispatcher
+// ---------------------------------------------------------------------------
 export async function layoutFamily(
   people: Person[],
   edges: Edge[],
@@ -187,20 +370,26 @@ export async function layoutFamily(
   rootId: string | null,
 ): Promise<LaidOutNode[]> {
   if (people.length === 0) return []
-  if (template === 'mandala') return layoutMandala(people, edges, rootId)
-  if (template === 'river') {
-    return layoutPedigree(people, edges, rootId, false, 'right')
+
+  if (template === 'ancestry' || template === 'river') {
+    return layoutAncestry(people, edges, rootId)
   }
+
+  if (template === 'hourglass' || template === 'mandala') {
+    return layoutHourglass(people, edges, rootId)
+  }
+
   if (template === 'compact') {
     try {
       const elkNodes = await layoutElk(people, edges)
       if (elkNodes.length === people.length) return elkNodes
     } catch {
-      // fall through to the packed pedigree
+      // fallback
     }
-    return layoutPedigree(people, edges, rootId, true, 'down')
   }
-  return layoutPedigree(people, edges, rootId, false, 'down')
+
+  // Default: Classical Descendants Top-Down Tree
+  return layoutDescendants(people, edges, rootId)
 }
 
-export { NODE, personById }
+export { personById }

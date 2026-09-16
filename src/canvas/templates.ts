@@ -7,43 +7,50 @@ export interface TemplateMeta {
   description: string
   accent: string
   paper: string
+  styleKey: 'parchment' | 'plaque' | 'hourglass' | 'compact'
 }
 
 export const TEMPLATES: TemplateMeta[] = [
   {
     id: 'pedigree',
-    name: 'Heritage pedigree',
-    tag: 'Classic',
-    description: 'Generations flow downward, spouses sit side by side.',
-    accent: '#8b1e3f',
-    paper: 'linear-gradient(160deg, #fff6e8 0%, #f3d5b5 100%)',
+    name: 'Classical Descendants',
+    tag: 'Top-Down Tree',
+    description: 'Ancestors at top, generations flow downward, spouses sit side-by-side with children centered.',
+    accent: '#7d1634',
+    paper: 'linear-gradient(160deg, #fdfbf7 0%, #f4eee2 100%)',
+    styleKey: 'parchment',
   },
   {
-    id: 'river',
-    name: 'Ancestral river',
-    tag: 'Wide',
-    description: 'A left-to-right current of lineage, built for long families.',
-    accent: '#0f7a73',
-    paper: 'linear-gradient(120deg, #e7f6f3 0%, #d5ebe3 100%)',
+    id: 'ancestry',
+    name: 'Direct Ancestry Chart',
+    tag: 'Bottom-Up Pedigree',
+    description: 'Traces maternal and paternal bloodlines upward from chosen descendant to parents and grandparents.',
+    accent: '#0c6b65',
+    paper: 'linear-gradient(160deg, #f7faf9 0%, #e6f2ee 100%)',
+    styleKey: 'plaque',
   },
   {
-    id: 'mandala',
-    name: 'Lotus mandala',
-    tag: 'Radial',
-    description: 'The root sits at the centre; each generation opens like a bloom.',
-    accent: '#c45c26',
-    paper: 'linear-gradient(160deg, #ffe7d2 0%, #f6c1c8 100%)',
+    id: 'hourglass',
+    name: 'Balanced Hourglass',
+    tag: 'Ancestors & Heirs',
+    description: 'Centers on the chosen generation: parents branch upward, children branch downward.',
+    accent: '#c9a227',
+    paper: 'linear-gradient(160deg, #fdfaf2 0%, #faedd3 100%)',
+    styleKey: 'hourglass',
   },
   {
     id: 'compact',
-    name: 'Compact clan',
-    tag: 'Dense',
-    description: 'Tight cards for large families, still fully pannable.',
+    name: 'Compact Clan Matrix',
+    tag: 'High-Density Chart',
+    description: 'Crisp orthogonal hierarchical layout built for sprawling lineages with dozens of family branches.',
     accent: '#1f4e79',
-    paper: 'linear-gradient(160deg, #eef3fb 0%, #d9e2f2 100%)',
+    paper: 'linear-gradient(160deg, #f4f6fb 0%, #e3e8f4 100%)',
+    styleKey: 'compact',
   },
 ]
 
 export function templateById(id: TemplateId): TemplateMeta {
-  return TEMPLATES.find((item) => item.id === id) ?? TEMPLATES[0]
+  // Normalize legacy IDs
+  const normalizedId = id === 'river' ? 'ancestry' : id === 'mandala' ? 'hourglass' : id
+  return TEMPLATES.find((item) => item.id === normalizedId) ?? TEMPLATES[0]
 }

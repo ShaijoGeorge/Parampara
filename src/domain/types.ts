@@ -2,7 +2,13 @@ export type Gender = 'female' | 'male' | 'other' | 'unspecified'
 
 export type EdgeType = 'parent' | 'spouse'
 
-export type TemplateId = 'pedigree' | 'river' | 'mandala' | 'compact'
+export type TemplateId =
+  | 'pedigree'
+  | 'ancestry'
+  | 'hourglass'
+  | 'compact'
+  | 'river'
+  | 'mandala'
 
 export type ThemeMode = 'light' | 'dark'
 

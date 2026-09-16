@@ -4,9 +4,11 @@ export const genderSchema = z.enum(['female', 'male', 'other', 'unspecified'])
 
 export const templateIdSchema = z.enum([
   'pedigree',
+  'ancestry',
+  'hourglass',
+  'compact',
   'river',
   'mandala',
-  'compact',
 ])
 
 export const personFormSchema = z.object({

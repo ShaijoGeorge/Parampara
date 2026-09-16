@@ -1,0 +1,84 @@
+@import "tailwindcss";
+@import "@xyflow/react/dist/style.css";
+
+@theme {
+  --color-maroon: #8b1e3f;
+  --color-saffron: #e07a3f;
+  --color-saffron-ink: #7a3510;
+  --color-teal: #0f7a73;
+  --color-teal-ink: #083c39;
+  --color-gold: #c9a227;
+  --color-cream: #fdfbf7;
+  --color-ink: #2a1810;
+  --font-display: 'Cinzel', 'Playfair Display', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
+:root {
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.dark body {
+  background-color: var(--color-ink);
+  color: var(--color-cream);
+}
+
+/* React Flow custom styling adjustments */
+.react-flow__attribution {
+  display: none !important;
+}
+
+.react-flow__controls {
+  border-radius: 9999px !important;
+  overflow: hidden !important;
+  box-shadow: 0 10px 25px -5px rgba(42, 24, 16, 0.15) !important;
+  border: 1px solid rgba(139, 30, 63, 0.15) !important;
+}
+
+.dark .react-flow__controls {
+  border-color: rgba(253, 251, 247, 0.15) !important;
+  background-color: #2a1810 !important;
+}
+
+.react-flow__controls button {
+  border-bottom: 1px solid rgba(139, 30, 63, 0.1) !important;
+  background: white !important;
+  fill: #2a1810 !important;
+}
+
+.dark .react-flow__controls button {
+  background: #2a1810 !important;
+  fill: #fdfbf7 !important;
+  border-bottom-color: rgba(253, 251, 247, 0.1) !important;
+}
+
+/* Print optimizations */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  .react-flow__controls,
+  .react-flow__minimap {
+    display: none !important;
+  }
+
+  .react-flow__pane {
+    cursor: default !important;
+  }
+}

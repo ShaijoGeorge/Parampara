@@ -110,10 +110,10 @@ export function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
           )}
         </div>
 
-        {/* Member Details: Only Name and present optional details */}
-        <div className="min-w-0 flex-1">
+        {/* Member Details: Only necessary details (Name + Late badge) */}
+        <div className="min-w-0 flex-1 flex flex-col justify-center">
           <div className="flex items-center justify-between gap-1.5">
-            <h3 className="text-[13px] font-bold tracking-tight text-neutral-900 dark:text-neutral-100 truncate">
+            <h3 className="text-[13.5px] font-bold tracking-tight text-neutral-900 dark:text-neutral-100 truncate">
               {name}
             </h3>
 
@@ -127,20 +127,103 @@ export function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
               </span>
             )}
           </div>
+        </div>
+      </div>
 
-          {/* Family Name (optional: only if provided) */}
-          {familyName ? (
-            <p className="truncate text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
-              {familyName}
-            </p>
-          ) : null}
+      {/* Floating Quick Details Popover on Hover */}
+      <div className="absolute top-[calc(100%+6px)] left-0 w-[240px] pointer-events-none opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-150 ease-out z-[1000]">
+        <div className="relative rounded-xl border border-neutral-200/90 dark:border-neutral-800 bg-white/95 dark:bg-[#16161f]/95 backdrop-blur-xl p-3 shadow-craft-xl text-left">
+          {/* Pointer notch arrow */}
+          <div className="absolute -top-1 left-6 h-2 w-2 rotate-45 border-t border-l border-neutral-200/90 dark:border-neutral-800 bg-white/95 dark:bg-[#16161f]/95" />
 
-          {/* Age / Years (optional: only if provided) */}
-          {ageDisplay ? (
-            <p className="truncate text-[11px] font-medium text-indigo-600/90 dark:text-indigo-400/90 mt-0.5">
-              {ageDisplay}
-            </p>
-          ) : null}
+          {/* Header with full name and status */}
+          <div className="flex items-start justify-between gap-1.5 mb-2 pb-1.5 border-b border-neutral-100 dark:border-neutral-800/80">
+            <div className="min-w-0">
+              <h4 className="text-xs font-bold text-neutral-900 dark:text-neutral-100 truncate">
+                {name}
+              </h4>
+              {familyName ? (
+                <p className="text-[11px] text-neutral-500 dark:text-neutral-400 truncate">
+                  Family: <span className="font-medium text-neutral-700 dark:text-neutral-300">{familyName}</span>
+                </p>
+              ) : null}
+            </div>
+
+            {late ? (
+              <span className="shrink-0 inline-flex items-center gap-1 rounded-full border border-stone-300/80 dark:border-stone-700 bg-stone-100/90 dark:bg-stone-900/60 px-1.5 py-0.5 text-[9px] font-medium text-stone-600 dark:text-stone-300">
+                <span className="text-[8px] text-amber-500">✦</span> Late
+              </span>
+            ) : (
+              <span className="shrink-0 inline-flex items-center gap-1 rounded-full border border-emerald-200 dark:border-emerald-800/60 bg-emerald-50 dark:bg-emerald-950/40 px-1.5 py-0.5 text-[9px] font-medium text-emerald-700 dark:text-emerald-300">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> Living
+              </span>
+            )}
+          </div>
+
+          {/* Details Grid */}
+          <div className="space-y-1 text-[11px]">
+            {/* Age & Lifespan */}
+            {ageDisplay ? (
+              <div className="flex items-center justify-between text-neutral-700 dark:text-neutral-300">
+                <span className="text-neutral-500 dark:text-neutral-400">Age:</span>
+                <span className="font-semibold text-indigo-600 dark:text-indigo-400">
+                  {ageDisplay}
+                </span>
+              </div>
+            ) : null}
+
+            {/* Birth / Death Years if not already in ageDisplay */}
+            {person.birthYear || person.deathYear ? (
+              <div className="flex items-center justify-between text-neutral-700 dark:text-neutral-300">
+                <span className="text-neutral-500 dark:text-neutral-400">Years:</span>
+                <span className="font-medium text-neutral-800 dark:text-neutral-200">
+                  {person.birthYear && person.deathYear
+                    ? `${person.birthYear} – ${person.deathYear}`
+                    : person.birthYear
+                      ? `b. ${person.birthYear}`
+                      : `† ${person.deathYear}`}
+                </span>
+              </div>
+            ) : null}
+
+            {/* Gender */}
+            <div className="flex items-center justify-between text-neutral-700 dark:text-neutral-300">
+              <span className="text-neutral-500 dark:text-neutral-400">Gender:</span>
+              <span className="capitalize font-medium text-neutral-800 dark:text-neutral-200">
+                {person.gender}
+              </span>
+            </div>
+
+            {/* Living Place */}
+            {person.livingPlace?.trim() ? (
+              <div className="flex items-center justify-between text-neutral-700 dark:text-neutral-300">
+                <span className="text-neutral-500 dark:text-neutral-400">Place:</span>
+                <span
+                  className="truncate max-w-[130px] font-medium text-neutral-800 dark:text-neutral-200"
+                  title={person.livingPlace}
+                >
+                  {person.livingPlace}
+                </span>
+              </div>
+            ) : null}
+
+            {/* Notes snippet */}
+            {person.notes?.trim() ? (
+              <div className="mt-1 pt-1.5 border-t border-neutral-100 dark:border-neutral-800/60">
+                <p
+                  className="text-[10px] text-neutral-500 dark:text-neutral-400 italic line-clamp-2"
+                  title={person.notes}
+                >
+                  "{person.notes}"
+                </p>
+              </div>
+            ) : null}
+          </div>
+
+          {/* Footer hint */}
+          <div className="mt-2 pt-1.5 border-t border-neutral-100 dark:border-neutral-800/60 text-[9.5px] text-neutral-400 dark:text-neutral-500 text-center flex items-center justify-center gap-1">
+            <span>Click card to edit</span>
+          </div>
         </div>
       </div>
     </article>

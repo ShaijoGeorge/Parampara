@@ -168,6 +168,11 @@ body {
   border-color: rgba(255, 255, 255, 0.09) !important;
 }
 
+/* Elevate hovered nodes above siblings and canvas edges */
+.react-flow__node:hover {
+  z-index: 1000 !important;
+}
+
 /* Print Optimization */
 @media print {
   .no-print {

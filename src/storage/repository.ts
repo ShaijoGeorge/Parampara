@@ -26,6 +26,16 @@ export interface TreeRepository {
     treeId: string,
     personId: string,
     kind: RelativeKind,
+    options?: { spouseId?: string | null },
+  ): Promise<Person>
+  addChildToCouple(
+    treeId: string,
+    parentAId: string,
+    parentBId: string,
+  ): Promise<Person>
+  addChildToSingleParent(
+    treeId: string,
+    parentId: string,
   ): Promise<Person>
   setRoot(treeId: string, personId: string): Promise<void>
   setTemplate(treeId: string, templateId: TemplateId): Promise<void>

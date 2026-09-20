@@ -60,6 +60,22 @@ export class RemoteTreeRepository implements TreeRepository {
     _treeId: string,
     _personId: string,
     _kind: RelativeKind,
+    _options?: { spouseId?: string | null },
+  ): Promise<Person> {
+    this.unsupported()
+  }
+
+  async addChildToCouple(
+    _treeId: string,
+    _parentAId: string,
+    _parentBId: string,
+  ): Promise<Person> {
+    this.unsupported()
+  }
+
+  async addChildToSingleParent(
+    _treeId: string,
+    _parentId: string,
   ): Promise<Person> {
     this.unsupported()
   }

@@ -171,6 +171,7 @@ export class DexieTreeRepository implements TreeRepository {
     treeId: string,
     personId: string,
     kind: RelativeKind,
+    options?: { spouseId?: string | null },
   ): Promise<Person> {
     const bundle = await this.getBundle(treeId)
     if (!bundle) throw new Error('Tree not found')
@@ -206,7 +207,10 @@ export class DexieTreeRepository implements TreeRepository {
         toId: created.id,
         type: 'parent',
       })
-      const spouseId = spousesOf(personId, bundle.edges)[0]
+      const spouseId =
+        options?.spouseId !== undefined
+          ? options.spouseId
+          : spousesOf(personId, bundle.edges)[0]
       if (spouseId) {
         extraEdges.push({
           id: newId(),
@@ -257,6 +261,21 @@ export class DexieTreeRepository implements TreeRepository {
       await db.trees.put({ ...bundle.tree, updatedAt: now() })
     })
     return created
+  }
+
+  async addChildToCouple(
+    treeId: string,
+    parentAId: string,
+    parentBId: string,
+  ): Promise<Person> {
+    return this.addRelative(treeId, parentAId, 'child', { spouseId: parentBId })
+  }
+
+  async addChildToSingleParent(
+    treeId: string,
+    parentId: string,
+  ): Promise<Person> {
+    return this.addRelative(treeId, parentId, 'child', { spouseId: null })
   }
 
   async setRoot(treeId: string, personId: string): Promise<void> {

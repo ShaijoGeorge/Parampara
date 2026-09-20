@@ -4,7 +4,7 @@ import { FamilyCanvas } from '../canvas/FamilyCanvas'
 import { templateById } from '../canvas/templates'
 import { MemberForm } from '../components/editor/MemberForm'
 import { OnboardingTour } from '../components/editor/OnboardingTour'
-import { displayName } from '../domain/graph'
+import { displayName, spousesOf } from '../domain/graph'
 import { makeSampleBundle } from '../domain/sample'
 import { treeNameSchema, type PersonFormValues } from '../domain/schemas'
 import type { Person, RelativeKind, TreeBundle } from '../domain/types'
@@ -113,6 +113,20 @@ export function TreeDetailPage() {
     setSelectedPersonId(created.id)
   }
 
+  const handleAddChildToCouple = async (parentAId: string, parentBId: string) => {
+    if (!bundle) return
+    const created = await repo.addChildToCouple(bundle.tree.id, parentAId, parentBId)
+    await refresh()
+    setSelectedPersonId(created.id)
+  }
+
+  const handleAddChildToSingleParent = async (parentId: string) => {
+    if (!bundle) return
+    const created = await repo.addChildToSingleParent(bundle.tree.id, parentId)
+    await refresh()
+    setSelectedPersonId(created.id)
+  }
+
   const handleSavePerson = async (values: PersonFormValues, photoDataUrl?: string) => {
     if (!bundle || !selectedPersonId) return
     const current = bundle.people.find((p) => p.id === selectedPersonId)
@@ -183,6 +197,11 @@ export function TreeDetailPage() {
   const currentTemplate = templateById(bundle.tree.templateId)
   const selectedPerson = bundle.people.find((p) => p.id === selectedPersonId)
   const isRoot = bundle.tree.rootPersonId === selectedPersonId
+  const currentSpouses = selectedPerson
+    ? spousesOf(selectedPerson.id, bundle.edges)
+        .map((sId) => bundle.people.find((p) => p.id === sId))
+        .filter((p): p is Person => Boolean(p))
+    : []
 
   return (
     <div className="relative flex h-[calc(100vh-4.25rem)] flex-col overflow-hidden bg-[#f9f9fb] dark:bg-[#09090b] transition-colors duration-300">
@@ -286,6 +305,7 @@ export function TreeDetailPage() {
           rootPersonId={bundle.tree.rootPersonId}
           selectedPersonId={selectedPersonId}
           onSelect={(pid) => setSelectedPersonId(pid)}
+          onAddChildToCouple={handleAddChildToCouple}
         />
 
         {/* Empty Lineage Callout */}
@@ -364,37 +384,61 @@ export function TreeDetailPage() {
 
             {/* Quick Kinship Connectors */}
             <div className="mb-4 space-y-2 rounded-2xl border border-black/[0.06] dark:border-white/[0.06] bg-black/[0.02] dark:bg-white/[0.02] p-3.5">
-              <p className="text-[11px] font-semibold tracking-wider text-neutral-500 uppercase">
-                Attach Kin to {selectedPerson.givenName || 'member'}
-              </p>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="flex items-center justify-between">
+                <p className="text-[11px] font-semibold tracking-wider text-neutral-500 uppercase">
+                  Kinship Actions
+                </p>
+                <span className="text-[10px] text-neutral-400">
+                  {selectedPerson.givenName || 'member'}
+                </span>
+              </div>
+
+              {/* Descendant Branch Actions (Couple vs Single Parent) */}
+              <div className="space-y-1.5 pt-0.5">
+                {currentSpouses.map((spouse) => (
+                  <button
+                    key={spouse.id}
+                    type="button"
+                    onClick={() => void handleAddChildToCouple(selectedPerson.id, spouse.id)}
+                    className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-teal-200/80 dark:border-teal-800/80 bg-teal-50/80 dark:bg-teal-950/40 py-2 text-xs font-semibold text-teal-700 dark:text-teal-300 hover:border-teal-400 hover:bg-teal-100/70 transition cursor-pointer shadow-craft-xs"
+                    title={`Create descendant branch from couple (${selectedPerson.givenName} & ${spouse.givenName})`}
+                  >
+                    <span className="text-[11px]">⚭</span> + Add Child with {spouse.givenName || 'Spouse'}
+                  </button>
+                ))}
+
+                <button
+                  type="button"
+                  onClick={() => void handleAddChildToSingleParent(selectedPerson.id)}
+                  className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-black/[0.08] dark:border-white/[0.08] bg-white dark:bg-[#1c1c24] py-2 text-xs font-semibold text-teal-600 dark:text-teal-400 hover:border-teal-500 transition cursor-pointer shadow-craft-xs"
+                  title="Create descendant branch as a single parent"
+                >
+                  <span className="text-[11px]">👤</span> + Add Child (Single Parent)
+                </button>
+              </div>
+
+              {/* Ancestor, Partner & Sibling Connectors */}
+              <div className="grid grid-cols-3 gap-1.5 pt-1 border-t border-black/[0.04] dark:border-white/[0.04]">
                 <button
                   type="button"
                   onClick={() => void handleAddRelative('parent')}
-                  className="flex items-center justify-center gap-1.5 rounded-xl border border-black/[0.08] dark:border-white/[0.08] bg-white dark:bg-[#1c1c24] py-2 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:border-indigo-500 dark:hover:border-indigo-400 transition cursor-pointer shadow-craft-xs"
+                  className="flex items-center justify-center gap-1 rounded-xl border border-black/[0.08] dark:border-white/[0.08] bg-white dark:bg-[#1c1c24] py-1.5 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:border-indigo-500 transition cursor-pointer shadow-craft-xs"
                 >
-                  + Add Parent
+                  + Parent
                 </button>
                 <button
                   type="button"
                   onClick={() => void handleAddRelative('spouse')}
-                  className="flex items-center justify-center gap-1.5 rounded-xl border border-black/[0.08] dark:border-white/[0.08] bg-white dark:bg-[#1c1c24] py-2 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:border-rose-500 transition cursor-pointer shadow-craft-xs"
+                  className="flex items-center justify-center gap-1 rounded-xl border border-black/[0.08] dark:border-white/[0.08] bg-white dark:bg-[#1c1c24] py-1.5 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:border-rose-500 transition cursor-pointer shadow-craft-xs"
                 >
-                  + Add Spouse
-                </button>
-                <button
-                  type="button"
-                  onClick={() => void handleAddRelative('child')}
-                  className="flex items-center justify-center gap-1.5 rounded-xl border border-black/[0.08] dark:border-white/[0.08] bg-white dark:bg-[#1c1c24] py-2 text-xs font-semibold text-teal-600 dark:text-teal-400 hover:border-teal-500 transition cursor-pointer shadow-craft-xs"
-                >
-                  + Add Child
+                  + Spouse
                 </button>
                 <button
                   type="button"
                   onClick={() => void handleAddRelative('sibling')}
-                  className="flex items-center justify-center gap-1.5 rounded-xl border border-black/[0.08] dark:border-white/[0.08] bg-white dark:bg-[#1c1c24] py-2 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:border-indigo-500 transition cursor-pointer shadow-craft-xs"
+                  className="flex items-center justify-center gap-1 rounded-xl border border-black/[0.08] dark:border-white/[0.08] bg-white dark:bg-[#1c1c24] py-1.5 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:border-indigo-500 transition cursor-pointer shadow-craft-xs"
                 >
-                  + Add Sibling
+                  + Sibling
                 </button>
               </div>
 

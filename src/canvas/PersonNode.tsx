@@ -10,6 +10,7 @@ export type PersonNodeData = {
   template: TemplateId
   isRoot?: boolean
   onAddRelative?: (kind: 'parent' | 'spouse' | 'child' | 'sibling') => void
+  [key: string]: unknown
 }
 
 export function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {

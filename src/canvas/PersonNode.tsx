@@ -1,7 +1,8 @@
 import { Handle, Position, type Node, type NodeProps } from '@xyflow/react'
 import { displayName } from '../domain/graph'
 import type { Person, TemplateId } from '../domain/types'
-import { GenderBadge, GENDER_THEMES } from '../ui/GenderIcon'
+import { CharacterAvatar } from '../ui/CharacterAvatar'
+import { GenderBadge } from '../ui/GenderIcon'
 
 export type PersonNodeData = {
   person: Person
@@ -15,9 +16,7 @@ export function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
   const { person, selected, isRoot } = data
   const name = displayName(person)
   const late = person.isLate
-  const hasPhoto = Boolean(person.photoDataUrl)
   const familyName = person.familyName?.trim()
-  const genderTheme = GENDER_THEMES[person.gender] ?? GENDER_THEMES.unspecified
 
   // Calculate age / year display (optional detail: only show if present)
   let ageDisplay: string | null = null
@@ -68,29 +67,15 @@ export function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
       />
 
       <div className="flex items-center gap-3">
-        {/* Avatar Cameo (Photo if available, otherwise monogram with gender tone) */}
+        {/* Avatar Cameo (Photo if available, otherwise character illustration) */}
         <div className="relative shrink-0">
-          <div
-            className={`flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl ring-1 shadow-xs transition-transform duration-200 group-hover:scale-105 ${
-              late
-                ? 'ring-stone-400/30 dark:ring-stone-600/30 grayscale'
-                : 'ring-black/5 dark:ring-white/10'
-            }`}
-          >
-            {hasPhoto ? (
-              <img
-                src={person.photoDataUrl}
-                alt={name}
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <div
-                className={`flex h-full w-full items-center justify-center bg-gradient-to-br text-xs font-semibold tracking-wider ${genderTheme.avatarGrad}`}
-              >
-                {initials(name)}
-              </div>
-            )}
-          </div>
+          <CharacterAvatar
+            photoDataUrl={person.photoDataUrl}
+            gender={person.gender}
+            name={name}
+            isLate={late}
+            className="h-12 w-12"
+          />
 
           {/* Gender Icon Badge overlaid on bottom-right of avatar */}
           <GenderBadge
@@ -145,13 +130,4 @@ export function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
       </div>
     </article>
   )
-}
-
-function initials(name: string): string {
-  return name
-    .split(' ')
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? '')
-    .join('')
 }

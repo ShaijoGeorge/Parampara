@@ -5,6 +5,7 @@ import { TEMPLATES } from '../canvas/templates'
 import { Badge } from '../ui/Badge'
 import { Button } from '../ui/Button'
 import { Card } from '../ui/Card'
+import { CharacterAvatar } from '../ui/CharacterAvatar'
 import { GenderBadge } from '../ui/GenderIcon'
 import type { Gender } from '../domain/types'
 
@@ -19,7 +20,6 @@ export function LandingPage() {
       late: true,
       age: 'Passed at 82',
       gender: 'female',
-      avatarBg: 'bg-gradient-to-br from-rose-500 to-amber-500 text-white',
     },
     {
       id: '2',
@@ -28,7 +28,6 @@ export function LandingPage() {
       late: true,
       age: 'Passed at 81',
       gender: 'male',
-      avatarBg: 'bg-gradient-to-br from-blue-600 to-indigo-600 text-white',
     },
     {
       id: '3',
@@ -37,7 +36,6 @@ export function LandingPage() {
       late: false,
       age: 'Age 58',
       gender: 'female',
-      avatarBg: 'bg-gradient-to-br from-rose-500 to-amber-500 text-white',
     },
     {
       id: '4',
@@ -46,7 +44,6 @@ export function LandingPage() {
       late: false,
       age: 'Age 62',
       gender: 'male',
-      avatarBg: 'bg-gradient-to-br from-blue-600 to-indigo-600 text-white',
     },
     {
       id: '5',
@@ -55,7 +52,6 @@ export function LandingPage() {
       late: false,
       age: 'Age 28',
       gender: 'female',
-      avatarBg: 'bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white',
     },
   ]
 
@@ -64,76 +60,49 @@ export function LandingPage() {
   return (
     <main className="min-h-screen bg-[#f9f9fb] dark:bg-[#09090b] text-neutral-900 dark:text-neutral-100 transition-colors duration-300 overflow-hidden">
       {/* Hero Section */}
-      <section className="relative mx-auto max-w-6xl px-4 pt-12 pb-20 sm:pt-20 sm:pb-28">
-        {/* Soft Ambient Radiance */}
-        <div className="pointer-events-none absolute -top-40 left-1/2 h-[560px] w-[680px] -translate-x-1/2 rounded-full bg-gradient-to-b from-indigo-500/10 via-purple-500/5 to-transparent blur-3xl dark:from-indigo-500/15 dark:via-purple-500/10" />
+      <section className="relative mx-auto max-w-6xl px-4 pt-16 pb-20 sm:pt-24 sm:pb-28">
+        <div className="text-center">
+          <div className="inline-flex items-center gap-2 rounded-full border border-black/[0.08] dark:border-white/[0.08] bg-white/70 dark:bg-[#141419]/70 px-3.5 py-1 text-xs text-neutral-600 dark:text-neutral-400 shadow-craft-xs backdrop-blur-md">
+            <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            Parampara Studio · 100% Private, Local-First Family Tree
+          </div>
 
-        <div className="relative text-center">
-          {/* Subtle Announcement Pill */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="inline-flex items-center justify-center"
-          >
-            <div className="inline-flex items-center gap-2 rounded-full border border-black/[0.08] bg-white/80 dark:border-white/[0.08] dark:bg-[#141419]/80 px-3.5 py-1 text-xs font-medium text-neutral-600 dark:text-neutral-300 shadow-craft-xs backdrop-blur-md">
-              <span className="flex h-1.5 w-1.5 rounded-full bg-indigo-500" />
-              <span>Sovereign Family Studio · 100% On-Device Privacy</span>
-            </div>
-          </motion.div>
-
-          {/* Clean Grotesque Headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.5 }}
-            className="mx-auto mt-6 max-w-4xl text-5xl font-bold tracking-tight sm:text-6xl md:text-7xl lg:text-[80px] lg:leading-[1.06]"
-          >
-            Your family story.{' '}
-            <span className="bg-gradient-to-r from-neutral-900 via-neutral-600 to-neutral-800 dark:from-white dark:via-neutral-200 dark:to-neutral-400 bg-clip-text text-transparent">
-              Crafted with joy.
+          <h1 className="mt-6 text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-neutral-900 dark:text-white leading-[1.08]">
+            Generations woven into <br className="hidden sm:inline" />
+            <span className="bg-gradient-to-r from-indigo-500 via-purple-500 to-amber-500 bg-clip-text text-transparent">
+              timeless genealogy.
             </span>
-          </motion.h1>
+          </h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-            className="mx-auto mt-6 max-w-2xl text-lg sm:text-xl text-neutral-600 dark:text-neutral-400 leading-relaxed font-normal"
-          >
-            Parampara reimagines family trees into fluid, interactive canvases. Weave portraits, sacred memories, and kinship into timeless heirlooms — stored privately inside your browser.
-          </motion.p>
+          <p className="mx-auto mt-6 max-w-2xl text-base sm:text-lg text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            Preserve your ancestors, descendants, spouses, and shared memories in an intuitive, beautifully crafted interactive descendants tree. Stored only on your device.
+          </p>
 
-          {/* Action CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-            className="mt-8 flex flex-wrap items-center justify-center gap-3.5"
-          >
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link to="/trees">
-              <Button variant="primary" size="lg" className="shadow-craft-sm">
-                Open Studio Free →
+              <Button variant="primary" size="lg" className="shadow-craft-md">
+                Launch Studio Canvas →
               </Button>
             </Link>
-            <Link to="/about">
+            <a href="#interactive-preview">
               <Button variant="secondary" size="lg">
-                Privacy & Philosophy
+                Explore Interactive Lineage ↓
               </Button>
-            </Link>
-          </motion.div>
+            </a>
+          </div>
         </div>
 
-        {/* Floating App Preview Window */}
+        {/* Live Interactive Preview Board */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.96, y: 28 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.6 }}
-          className="relative mt-14 sm:mt-20"
+          id="interactive-preview"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.15 }}
+          className="mt-14 overflow-hidden rounded-3xl border border-black/[0.08] dark:border-white/[0.08] bg-white/60 dark:bg-[#141419]/60 p-4 sm:p-6 shadow-craft-lg backdrop-blur-xl"
         >
-          <div className="relative mx-auto max-w-5xl rounded-[32px] border border-black/[0.08] dark:border-white/[0.08] bg-white/90 dark:bg-[#141419]/90 p-5 sm:p-7 shadow-craft-lg backdrop-blur-xl">
-            {/* Window Chrome Header */}
-            <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-black/[0.06] dark:border-white/[0.06] pb-4">
+          <div className="flex flex-col gap-4">
+            {/* Board Window Bar */}
+            <div className="flex items-center justify-between border-b border-black/[0.06] dark:border-white/[0.06] pb-3">
               <div className="flex items-center gap-2">
                 <span className="h-3 w-3 rounded-full bg-rose-400/80" />
                 <span className="h-3 w-3 rounded-full bg-amber-400/80" />
@@ -166,19 +135,12 @@ export function LandingPage() {
                   >
                     <div className="flex items-center gap-3">
                       <div className="relative shrink-0">
-                        <div
-                          className={`flex h-12 w-12 items-center justify-center rounded-xl overflow-hidden shadow-xs ring-1 transition-transform duration-200 group-hover:scale-105 ${
-                            node.late
-                              ? 'ring-stone-400/30 dark:ring-stone-600/30 grayscale'
-                              : 'ring-black/5 dark:ring-white/10'
-                          }`}
-                        >
-                          <div
-                            className={`flex h-full w-full items-center justify-center text-xs font-semibold tracking-wider ${node.avatarBg}`}
-                          >
-                            {node.name.split(' ').map((n) => n[0]).join('')}
-                          </div>
-                        </div>
+                        <CharacterAvatar
+                          gender={node.gender as Gender}
+                          name={node.name}
+                          isLate={node.late}
+                          className="h-12 w-12"
+                        />
 
                         {/* Gender Icon Badge */}
                         <GenderBadge

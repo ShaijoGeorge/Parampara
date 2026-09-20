@@ -5,6 +5,7 @@ import { personFormSchema, type PersonFormValues } from '../../domain/schemas'
 import type { Person } from '../../domain/types'
 import { compressPhoto } from '../../lib/photo'
 import { Button } from '../../ui/Button'
+import { CharacterAvatar } from '../../ui/CharacterAvatar'
 import { GenderBadge } from '../../ui/GenderIcon'
 import { Field, Select, TextArea, TextInput } from '../../ui/Field'
 
@@ -119,13 +120,13 @@ export function MemberForm({
 
       <Field label="Portrait photo">
         <div className="flex items-center gap-3">
-          {person.photoDataUrl ? (
-            <img
-              src={person.photoDataUrl}
-              alt="Portrait"
-              className="h-10 w-10 rounded-xl object-cover ring-1 ring-black/10 dark:ring-white/10"
-            />
-          ) : null}
+          <CharacterAvatar
+            photoDataUrl={person.photoDataUrl}
+            gender={currentGender}
+            name={person.givenName}
+            isLate={isLate ?? person.isLate}
+            className="h-10 w-10 shrink-0"
+          />
           <input
             type="file"
             accept="image/*"

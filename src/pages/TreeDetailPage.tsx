@@ -12,6 +12,7 @@ import { getRepository } from '../storage'
 import { Badge } from '../ui/Badge'
 import { Button } from '../ui/Button'
 import { Card } from '../ui/Card'
+import { CharacterAvatar } from '../ui/CharacterAvatar'
 import { GenderBadge } from '../ui/GenderIcon'
 import { Modal } from '../ui/Modal'
 import { TextInput } from '../ui/Field'
@@ -328,9 +329,13 @@ export function TreeDetailPage() {
             {/* Drawer Header */}
             <div className="mb-4 flex items-center justify-between border-b border-black/[0.06] dark:border-white/[0.06] pb-3.5">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 font-bold text-sm shadow-xs ring-1 ring-black/5 dark:ring-white/10">
-                  {selectedPerson.givenName?.[0] || '—'}
-                </div>
+                <CharacterAvatar
+                  photoDataUrl={selectedPerson.photoDataUrl}
+                  gender={selectedPerson.gender}
+                  name={displayName(selectedPerson)}
+                  isLate={selectedPerson.isLate}
+                  className="h-10 w-10 shrink-0"
+                />
                 <div>
                   <h3 className="text-sm font-bold tracking-tight text-neutral-900 dark:text-white truncate max-w-[200px]">
                     {displayName(selectedPerson)}

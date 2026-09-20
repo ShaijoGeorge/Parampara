@@ -179,18 +179,19 @@ export function TreesPage() {
                   <div>
                     {/* Visual Miniature Banner */}
                     <div
-                      className="relative mb-4 h-24 w-full rounded-xl border border-black/[0.06] dark:border-white/[0.06] overflow-hidden flex items-center justify-center p-4"
-                      style={{ background: skin.paper }}
+                      className="relative mb-4 h-24 w-full rounded-xl border border-black/[0.06] dark:border-white/[0.08] bg-gradient-to-b from-neutral-50 to-neutral-100/80 dark:from-[#1c1c24] dark:to-[#141419] overflow-hidden flex items-center justify-center p-4 shadow-inner"
                     >
                       <div className="absolute top-2.5 right-2.5">
-                        <Badge variant="neutral">{skin.tag}</Badge>
+                        <span className="inline-flex items-center gap-1 rounded-full border border-indigo-500/20 bg-indigo-500/10 px-2 py-0.5 text-[10px] font-semibold text-indigo-600 dark:text-indigo-400">
+                          {skin.tag}
+                        </span>
                       </div>
                       <div className="text-center">
-                        <p className="text-sm font-semibold tracking-tight text-neutral-800 dark:text-neutral-200">
+                        <p className="text-sm font-bold tracking-tight text-neutral-800 dark:text-neutral-100">
                           {skin.name}
                         </p>
-                        <p className="text-[10px] text-neutral-500 tracking-wider uppercase font-medium">
-                          Interactive Canvas
+                        <p className="text-[10px] text-neutral-400 dark:text-neutral-500 tracking-wider uppercase font-medium mt-0.5">
+                          Interactive Lineage Canvas
                         </p>
                       </div>
                     </div>

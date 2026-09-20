@@ -291,8 +291,7 @@ export function LandingPage() {
               </div>
 
               <div
-                className="flex h-60 w-full items-center justify-center rounded-2xl border border-black/[0.06] dark:border-white/[0.06] p-6 shadow-inner"
-                style={{ background: activeTemplate.paper }}
+                className="flex h-60 w-full items-center justify-center rounded-2xl border border-black/[0.06] dark:border-white/[0.08] bg-gradient-to-b from-neutral-50 to-neutral-100/80 dark:from-[#181820] dark:to-[#121216] p-6 shadow-inner"
               >
                 <div className="text-center space-y-2 text-neutral-900 dark:text-neutral-100">
                   <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-white/80 dark:bg-[#141419]/80 border border-black/[0.08] dark:border-white/[0.08] shadow-craft-xs text-lg font-bold">

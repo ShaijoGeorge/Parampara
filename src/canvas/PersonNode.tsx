@@ -46,7 +46,7 @@ export function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
   return (
     <article
       className={[
-        'group relative w-[140px] h-[140px] rounded-2xl p-2.5 flex flex-col items-center justify-center text-center transition-all duration-200 backdrop-blur-md select-none',
+        'group relative w-[124px] h-[124px] rounded-2xl p-2 flex flex-col items-center justify-center text-center transition-all duration-200 backdrop-blur-md select-none',
         'border',
         selected
           ? 'border-indigo-500 bg-white ring-2 ring-indigo-500/25 shadow-craft-md dark:border-indigo-400 dark:bg-[#181820] dark:ring-indigo-400/25'
@@ -84,7 +84,7 @@ export function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
       {/* Root Star Badge (Top-Left corner) */}
       {isRoot && (
         <div
-          className="absolute top-2 left-2 flex h-4 w-4 items-center justify-center rounded-full bg-amber-400 text-[9px] text-amber-950 font-bold shadow-xs z-10"
+          className="absolute top-1.5 left-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-amber-400 text-[9px] text-amber-950 font-bold shadow-xs z-10"
           title="Tree Root Ancestor"
         >
           ★
@@ -94,21 +94,21 @@ export function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
       {/* Late / Deceased Badge (Top-Right corner) */}
       {late && (
         <span
-          className="absolute top-2 right-2 inline-flex items-center gap-0.5 rounded-full border border-stone-300/80 dark:border-stone-700 bg-stone-100/90 dark:bg-stone-900/80 px-1.5 py-0.5 text-[8.5px] font-medium text-stone-600 dark:text-stone-300 z-10"
+          className="absolute top-1.5 right-1.5 inline-flex items-center gap-0.5 rounded-full border border-stone-300/80 dark:border-stone-700 bg-stone-100/90 dark:bg-stone-900/80 px-1.5 py-0.5 text-[8px] font-medium text-stone-600 dark:text-stone-300 z-10"
           title="Departed Ancestor"
         >
           <span className="text-[7px] text-amber-500">✦</span> Late
         </span>
       )}
 
-      {/* Centered Avatar Cameo */}
-      <div className="relative shrink-0">
+      {/* Centered Avatar Cameo: Prominently sized to fit the square */}
+      <div className="relative shrink-0 mt-0.5">
         <CharacterAvatar
           photoDataUrl={person.photoDataUrl}
           gender={person.gender}
           name={name}
           isLate={late}
-          className="h-11 w-11"
+          className="h-[52px] w-[52px]"
         />
 
         {/* Gender Icon Badge overlaid on bottom-right of avatar */}
@@ -119,18 +119,33 @@ export function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
         />
       </div>
 
-      {/* Centered Name: Strictly fits inside the square */}
-      <div className="w-full max-w-[124px] mt-1.5 px-1 min-w-0 overflow-hidden">
+      {/* Centered Name & Detail Line: Perfectly fills the lower section */}
+      <div className="w-full mt-1.5 px-1 flex flex-col items-center justify-center">
         <h3
-          className="text-xs font-bold tracking-tight text-neutral-900 dark:text-neutral-100 line-clamp-2 leading-[15px] text-center break-words [overflow-wrap:anywhere]"
+          className="text-[12px] font-bold tracking-tight text-neutral-900 dark:text-neutral-100 truncate max-w-full text-center leading-tight"
           title={name}
         >
           {name}
         </h3>
+
+        {/* Dynamic Detail Line: Age, Family Name, or Gender to avoid empty space */}
+        {ageDisplay ? (
+          <p className="text-[10px] font-semibold text-indigo-500 dark:text-indigo-400 truncate max-w-full text-center leading-tight mt-0.5">
+            {ageDisplay}
+          </p>
+        ) : familyName ? (
+          <p className="text-[10px] text-neutral-400 dark:text-neutral-500 truncate max-w-full text-center leading-tight mt-0.5">
+            {familyName}
+          </p>
+        ) : (
+          <p className="text-[9.5px] text-neutral-400/80 dark:text-neutral-500/80 capitalize truncate max-w-full text-center leading-tight mt-0.5">
+            {person.gender}
+          </p>
+        )}
       </div>
 
       {/* Floating Quick Details Popover on Hover */}
-      <div className="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 w-[220px] pointer-events-none opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-150 ease-out z-[1000]">
+      <div className="absolute top-[calc(100%+6px)] left-1/2 -translate-x-1/2 w-[210px] pointer-events-none opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-150 ease-out z-[1000]">
         <div className="relative rounded-xl border border-neutral-200/90 dark:border-neutral-800 bg-white/95 dark:bg-[#16161f]/95 backdrop-blur-xl p-3 shadow-craft-xl text-left">
           {/* Pointer notch arrow centered */}
           <div className="absolute -top-1 left-1/2 -translate-x-1/2 h-2 w-2 rotate-45 border-t border-l border-neutral-200/90 dark:border-neutral-800 bg-white/95 dark:bg-[#16161f]/95" />

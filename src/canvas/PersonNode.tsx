@@ -102,13 +102,13 @@ export function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
       )}
 
       {/* Centered Avatar Cameo */}
-      <div className="relative shrink-0 mt-0.5">
+      <div className="relative shrink-0">
         <CharacterAvatar
           photoDataUrl={person.photoDataUrl}
           gender={person.gender}
           name={name}
           isLate={late}
-          className="h-12 w-12"
+          className="h-11 w-11"
         />
 
         {/* Gender Icon Badge overlaid on bottom-right of avatar */}
@@ -119,10 +119,10 @@ export function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
         />
       </div>
 
-      {/* Centered Name (up to 2 lines) */}
-      <div className="w-full mt-2 px-1">
+      {/* Centered Name: Strictly fits inside the square */}
+      <div className="w-full max-w-[124px] mt-1.5 px-1 min-w-0 overflow-hidden">
         <h3
-          className="text-[12.5px] font-bold tracking-tight text-neutral-900 dark:text-neutral-100 line-clamp-2 leading-snug break-words"
+          className="text-xs font-bold tracking-tight text-neutral-900 dark:text-neutral-100 line-clamp-2 leading-[15px] text-center break-words [overflow-wrap:anywhere]"
           title={name}
         >
           {name}

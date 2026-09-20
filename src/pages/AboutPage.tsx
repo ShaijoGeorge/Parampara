@@ -32,9 +32,9 @@ export function AboutPage() {
               and who we hold in sacred memory.
             </p>
             <p className="mt-3 leading-relaxed text-sm text-neutral-600 dark:text-neutral-300">
-              Rather than forcing your family into an awkward static diagram, Parampara gives you four
-              fluid layout perspectives: <strong>Descendants Flow</strong>, <strong>Direct Lineage</strong>,
-              <strong>Balanced Hourglass</strong>, and the structured <strong>Clan Bento Matrix</strong>.
+              Rather than forcing your family into an awkward static diagram, Parampara organizes your lineage
+              through an elegant <strong>Descendants Flow</strong>: ancestors honored at the summit, generations cascading downward,
+              and spouses united side-by-side with children centered below.
             </p>
           </Card>
 

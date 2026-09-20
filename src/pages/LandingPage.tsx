@@ -2,13 +2,11 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { TEMPLATES } from '../canvas/templates'
-import type { TemplateId } from '../domain/types'
 import { Badge } from '../ui/Badge'
 import { Button } from '../ui/Button'
 import { Card } from '../ui/Card'
 
 export function LandingPage() {
-  const [activeSilhouette, setActiveSilhouette] = useState<TemplateId>('pedigree')
   const [selectedNodeId, setSelectedNodeId] = useState<string>('1')
 
   const sampleNodes = [
@@ -69,7 +67,7 @@ export function LandingPage() {
     },
   ]
 
-  const activeTemplate = TEMPLATES.find((t) => t.id === activeSilhouette) ?? TEMPLATES[0]
+  const activeTemplate = TEMPLATES[0]!
 
   return (
     <main className="min-h-screen bg-[#f9f9fb] dark:bg-[#09090b] text-neutral-900 dark:text-neutral-100 transition-colors duration-300 overflow-hidden">
@@ -235,40 +233,19 @@ export function LandingPage() {
         </motion.div>
       </section>
 
-      {/* Interactive Silhouette Showcase */}
+      {/* Descendants Flow Showcase */}
       <section className="relative border-y border-black/[0.06] dark:border-white/[0.06] bg-white/60 dark:bg-[#111115]/60 py-20 backdrop-blur-md">
         <div className="mx-auto max-w-6xl px-4">
           <div className="text-center">
             <span className="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
-              Genealogy Perspectives
+              Genealogy Architecture
             </span>
             <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-              Four genuine perspectives. One unified kinship.
+              Descendants Flow. The natural shape of family.
             </h2>
             <p className="mx-auto mt-2.5 max-w-2xl text-sm sm:text-base text-neutral-600 dark:text-neutral-400">
-              Your relationships remain identical. Switch your visual layout anytime with zero data alteration.
+              Ancestors at the top, generations cascading gracefully downward, spouses united side-by-side with children centered beneath.
             </p>
-
-            {/* Template Selector Segmented Pill */}
-            <div className="mt-8 inline-flex flex-wrap justify-center gap-1.5 rounded-full bg-neutral-100 dark:bg-neutral-900/80 p-1.5 border border-black/[0.06] dark:border-white/[0.06]">
-              {TEMPLATES.map((tmpl) => {
-                const active = activeSilhouette === tmpl.id
-                return (
-                  <button
-                    key={tmpl.id}
-                    type="button"
-                    onClick={() => setActiveSilhouette(tmpl.id)}
-                    className={`rounded-full px-4 py-1.5 text-xs font-semibold tracking-tight transition-all cursor-pointer ${
-                      active
-                        ? 'bg-white dark:bg-[#1a1a22] text-neutral-900 dark:text-white shadow-craft-xs'
-                        : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
-                    }`}
-                  >
-                    {tmpl.name}
-                  </button>
-                )
-              })}
-            </div>
           </div>
 
           {/* Active Silhouette Detail Card */}
@@ -298,7 +275,7 @@ export function LandingPage() {
                 <div className="pt-2">
                   <Link to="/trees">
                     <Button variant="primary" size="md">
-                      Open with {activeTemplate.name} →
+                      Open Studio Canvas →
                     </Button>
                   </Link>
                 </div>

@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { TEMPLATES, templateById } from '../canvas/templates'
+import { templateById } from '../canvas/templates'
 import { makeSampleBundle } from '../domain/sample'
 import { treeNameSchema } from '../domain/schemas'
-import type { TemplateId, Tree } from '../domain/types'
+import type { Tree } from '../domain/types'
 import { getRepository } from '../storage'
 import { BackupBanner } from '../ui/BackupBanner'
 import { Badge } from '../ui/Badge'
@@ -16,7 +16,6 @@ export function TreesPage() {
   const [trees, setTrees] = useState<Tree[]>([])
   const [createOpen, setCreateOpen] = useState(false)
   const [name, setName] = useState('Our Family Lineage')
-  const [chosenTemplate, setChosenTemplate] = useState<TemplateId>('pedigree')
   const [error, setError] = useState('')
   const [importError, setImportError] = useState('')
   const fileRef = useRef<HTMLInputElement>(null)
@@ -37,7 +36,7 @@ export function TreesPage() {
       setError(parsed.error.issues[0]?.message ?? 'Invalid name')
       return
     }
-    const tree = await repo.createTree(parsed.data, chosenTemplate)
+    const tree = await repo.createTree(parsed.data, 'pedigree')
     setCreateOpen(false)
     navigate(`/trees/${tree.id}`)
   }
@@ -281,29 +280,18 @@ export function TreesPage() {
               {error ? <p className="mt-1 text-xs text-rose-500">{error}</p> : null}
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold tracking-wider text-neutral-600 dark:text-neutral-300 uppercase mb-2">
-                Layout Perspective
-              </label>
-              <div className="grid grid-cols-2 gap-2">
-                {TEMPLATES.map((tmpl) => (
-                  <button
-                    key={tmpl.id}
-                    type="button"
-                    onClick={() => setChosenTemplate(tmpl.id)}
-                    className={`rounded-xl border p-3 text-left transition cursor-pointer ${
-                      chosenTemplate === tmpl.id
-                        ? 'border-indigo-500 bg-white ring-2 ring-indigo-500/20 shadow-craft-xs dark:border-indigo-400 dark:bg-[#181820]'
-                        : 'border-black/[0.07] bg-white/70 hover:border-black/20 dark:border-white/[0.08] dark:bg-[#141419]/70'
-                    }`}
-                  >
-                    <p className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
-                      {tmpl.name}
-                    </p>
-                    <p className="text-[11px] text-neutral-500 dark:text-neutral-400">{tmpl.tag}</p>
-                  </button>
-                ))}
+            <div className="rounded-xl border border-black/[0.06] dark:border-white/[0.06] bg-black/[0.02] dark:bg-white/[0.02] p-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-neutral-800 dark:text-neutral-200">
+                  Descendants Flow
+                </span>
+                <span className="text-[10px] font-medium tracking-wide uppercase text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 px-2 py-0.5 rounded-full border border-indigo-200 dark:border-indigo-800/40">
+                  Top-Down Tree
+                </span>
               </div>
+              <p className="mt-1 text-[11px] text-neutral-500 dark:text-neutral-400">
+                Ancestors at the top, generations cascade downward, spouses sit side-by-side with children centered below.
+              </p>
             </div>
 
             <div className="flex justify-end gap-2 pt-3 border-t border-black/[0.06] dark:border-white/[0.06]">

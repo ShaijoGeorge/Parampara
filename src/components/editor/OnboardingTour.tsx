@@ -10,8 +10,8 @@ const STEPS = [
     body: 'Click any card to open the inspector, then attach parents, spouses, children, or siblings with one tap.',
   },
   {
-    title: 'Four genuine perspectives',
-    body: 'Switch between Descendants Flow, Direct Lineage, Balanced Hourglass, and Clan Bento Matrix anytime.',
+    title: 'Descendants Flow Architecture',
+    body: 'Ancestors sit at the top, generations cascade naturally downward, and spouses connect side-by-side with children centered below.',
   },
   {
     title: 'Sovereign on-device safety',

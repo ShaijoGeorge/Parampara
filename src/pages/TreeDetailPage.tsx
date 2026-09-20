@@ -4,11 +4,10 @@ import { FamilyCanvas } from '../canvas/FamilyCanvas'
 import { templateById } from '../canvas/templates'
 import { MemberForm } from '../components/editor/MemberForm'
 import { OnboardingTour } from '../components/editor/OnboardingTour'
-import { TemplateGallery } from '../components/editor/TemplateGallery'
 import { displayName } from '../domain/graph'
 import { makeSampleBundle } from '../domain/sample'
 import { treeNameSchema, type PersonFormValues } from '../domain/schemas'
-import type { Person, RelativeKind, TemplateId, TreeBundle } from '../domain/types'
+import type { Person, RelativeKind, TreeBundle } from '../domain/types'
 import { getRepository } from '../storage'
 import { Badge } from '../ui/Badge'
 import { Button } from '../ui/Button'
@@ -21,7 +20,6 @@ export function TreeDetailPage() {
   const [bundle, setBundle] = useState<TreeBundle | null>(null)
   const [loading, setLoading] = useState(true)
   const [selectedPersonId, setSelectedPersonId] = useState<string | null>(null)
-  const [templateModalOpen, setTemplateModalOpen] = useState(false)
   const [renameModalOpen, setRenameModalOpen] = useState(false)
   const [treeNameInput, setTreeNameInput] = useState('')
   const [renameError, setRenameError] = useState('')
@@ -50,12 +48,6 @@ export function TreeDetailPage() {
     await repo.saveSettings({ onboardingDone: true })
   }
 
-  const onSelectTemplate = async (templateId: TemplateId) => {
-    if (!bundle) return
-    await repo.setTemplate(bundle.tree.id, templateId)
-    setTemplateModalOpen(false)
-    await refresh()
-  }
 
   const handleRename = async () => {
     if (!bundle) return
@@ -234,11 +226,9 @@ export function TreeDetailPage() {
             </button>
           </div>
 
-          {/* Template Badge & Trigger */}
-          <button
-            type="button"
-            onClick={() => setTemplateModalOpen(true)}
-            className="hidden sm:inline-flex items-center gap-2 rounded-full border border-black/[0.08] dark:border-white/[0.08] bg-white/80 dark:bg-[#181820]/80 px-3 py-1 text-xs font-medium text-neutral-700 dark:text-neutral-300 hover:border-black/20 dark:hover:border-white/20 transition-all cursor-pointer shadow-craft-xs"
+          {/* Template Badge */}
+          <div
+            className="hidden sm:inline-flex items-center gap-2 rounded-full border border-black/[0.08] dark:border-white/[0.08] bg-white/80 dark:bg-[#181820]/80 px-3 py-1 text-xs font-medium text-neutral-700 dark:text-neutral-300 shadow-craft-xs"
           >
             <span
               className="h-2 w-2 rounded-full ring-1 ring-black/10 dark:ring-white/10"
@@ -246,7 +236,7 @@ export function TreeDetailPage() {
             />
             <span>{currentTemplate.name}</span>
             <span className="text-[10px] uppercase tracking-wider text-neutral-400">· {currentTemplate.tag}</span>
-          </button>
+          </div>
         </div>
 
         {/* Action Buttons */}
@@ -262,15 +252,6 @@ export function TreeDetailPage() {
             </Button>
           )}
 
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            className="hidden sm:inline-flex"
-            onClick={() => setTemplateModalOpen(true)}
-          >
-            Perspective
-          </Button>
 
           <Button
             type="button"
@@ -448,20 +429,6 @@ export function TreeDetailPage() {
         />
       )}
 
-      {/* Silhouette Switcher Modal */}
-      <Modal
-        open={templateModalOpen}
-        title="Canvas Perspectives"
-        onClose={() => setTemplateModalOpen(false)}
-      >
-        <p className="mb-4 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
-          Transform your genealogy canvas layout instantly. Your family data remains identical across every perspective.
-        </p>
-        <TemplateGallery
-          current={bundle.tree.templateId}
-          onPick={(tid) => void onSelectTemplate(tid)}
-        />
-      </Modal>
 
       {/* Rename Tree Modal */}
       <Modal

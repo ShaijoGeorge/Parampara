@@ -67,14 +67,33 @@ export function FamilyCanvas({
         }
       })
 
+      const nodePosMap = new Map<string, { x: number; y: number }>()
+      laid.forEach((item) => nodePosMap.set(item.id, { x: item.x, y: item.y }))
+
       const nextEdges: FlowEdge[] = edges.map((edge) => {
         const isSpouse = edge.type === 'spouse'
+        let source = edge.fromId
+        let target = edge.toId
+        let sourceHandle: string | undefined = undefined
+        let targetHandle: string | undefined = undefined
+
+        if (isSpouse) {
+          const fromPos = nodePosMap.get(edge.fromId)
+          const toPos = nodePosMap.get(edge.toId)
+          if (fromPos && toPos && fromPos.x > toPos.x) {
+            source = edge.toId
+            target = edge.fromId
+          }
+          sourceHandle = 'r'
+          targetHandle = 'l'
+        }
+
         return {
           id: edge.id,
-          source: edge.fromId,
-          target: edge.toId,
-          sourceHandle: isSpouse ? 'r' : undefined,
-          targetHandle: isSpouse ? 'l' : undefined,
+          source,
+          target,
+          sourceHandle,
+          targetHandle,
           type: isSpouse ? 'straight' : 'smoothstep',
           animated: false,
           style: {

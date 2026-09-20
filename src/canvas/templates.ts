@@ -20,37 +20,8 @@ export const TEMPLATES: TemplateMeta[] = [
     paper: 'linear-gradient(180deg, #fbfbfe 0%, #f3f4f9 100%)',
     styleKey: 'parchment',
   },
-  {
-    id: 'ancestry',
-    name: 'Direct Lineage',
-    tag: 'Bottom-Up Pedigree',
-    description: 'Traces maternal and paternal bloodlines upward from chosen descendant to parents and grandparents.',
-    accent: '#0d9488',
-    paper: 'linear-gradient(180deg, #f6faf9 0%, #edf5f3 100%)',
-    styleKey: 'plaque',
-  },
-  {
-    id: 'hourglass',
-    name: 'Balanced Hourglass',
-    tag: 'Ancestors & Heirs',
-    description: 'Centers on chosen generation: direct parents branch upward, heirs branch downward.',
-    accent: '#d97706',
-    paper: 'linear-gradient(180deg, #fdfbf7 0%, #fbf6ec 100%)',
-    styleKey: 'hourglass',
-  },
-  {
-    id: 'compact',
-    name: 'Clan Bento Matrix',
-    tag: 'High-Density Chart',
-    description: 'Clean orthogonal hierarchical layout built for sprawling multi-generational lineages.',
-    accent: '#2563eb',
-    paper: 'linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%)',
-    styleKey: 'compact',
-  },
 ]
 
-export function templateById(id: TemplateId): TemplateMeta {
-  // Normalize legacy IDs
-  const normalizedId = id === 'river' ? 'ancestry' : id === 'mandala' ? 'hourglass' : id
-  return TEMPLATES.find((item) => item.id === normalizedId) ?? TEMPLATES[0]
+export function templateById(_id?: TemplateId): TemplateMeta {
+  return TEMPLATES[0]!
 }

@@ -5,6 +5,7 @@ import { personFormSchema, type PersonFormValues } from '../../domain/schemas'
 import type { Person } from '../../domain/types'
 import { compressPhoto } from '../../lib/photo'
 import { Button } from '../../ui/Button'
+import { GenderBadge } from '../../ui/GenderIcon'
 import { Field, Select, TextArea, TextInput } from '../../ui/Field'
 
 export function MemberForm({
@@ -22,6 +23,7 @@ export function MemberForm({
   })
 
   const isLate = useWatch({ control: form.control, name: 'isLate' })
+  const currentGender = useWatch({ control: form.control, name: 'gender' }) ?? person.gender
 
   useEffect(() => {
     form.reset(toValues(person))
@@ -46,12 +48,15 @@ export function MemberForm({
 
       <div className="grid grid-cols-2 gap-2.5">
         <Field label="Gender">
-          <Select {...form.register('gender')}>
-            <option value="female">Female</option>
-            <option value="male">Male</option>
-            <option value="other">Other</option>
-            <option value="unspecified">Unspecified</option>
-          </Select>
+          <div className="flex items-center gap-2">
+            <GenderBadge gender={currentGender} size="md" />
+            <Select {...form.register('gender')} className="flex-1">
+              <option value="female">Female</option>
+              <option value="male">Male</option>
+              <option value="other">Other</option>
+              <option value="unspecified">Unspecified</option>
+            </Select>
+          </div>
         </Field>
         <Field label="Place of living">
           <TextInput {...form.register('livingPlace')} />

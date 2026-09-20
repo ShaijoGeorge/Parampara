@@ -12,6 +12,7 @@ import { getRepository } from '../storage'
 import { Badge } from '../ui/Badge'
 import { Button } from '../ui/Button'
 import { Card } from '../ui/Card'
+import { GenderBadge } from '../ui/GenderIcon'
 import { Modal } from '../ui/Modal'
 import { TextInput } from '../ui/Field'
 
@@ -335,6 +336,7 @@ export function TreeDetailPage() {
                     {displayName(selectedPerson)}
                   </h3>
                   <div className="flex items-center gap-1.5 mt-0.5">
+                    <GenderBadge gender={selectedPerson.gender} size="sm" />
                     {isRoot && <Badge variant="accent">Central Root</Badge>}
                     {selectedPerson.isLate && (
                       <span className="rounded-full bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 text-[9px] font-medium text-neutral-500 dark:text-neutral-400">

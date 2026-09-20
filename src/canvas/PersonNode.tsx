@@ -1,6 +1,7 @@
 import { Handle, Position, type Node, type NodeProps } from '@xyflow/react'
 import { displayName } from '../domain/graph'
 import type { Person, TemplateId } from '../domain/types'
+import { GenderBadge, GENDER_THEMES } from '../ui/GenderIcon'
 
 export type PersonNodeData = {
   person: Person
@@ -10,53 +11,13 @@ export type PersonNodeData = {
   onAddRelative?: (kind: 'parent' | 'spouse' | 'child' | 'sibling') => void
 }
 
-const genderConfig: Record<
-  Person['gender'],
-  {
-    symbol: string
-    color: string
-    badgeBg: string
-    avatarGrad: string
-    label: string
-  }
-> = {
-  female: {
-    symbol: '♀',
-    color: 'text-rose-600 dark:text-rose-400',
-    badgeBg: 'bg-rose-50 border-rose-200/80 dark:bg-rose-950/40 dark:border-rose-900/60',
-    avatarGrad: 'from-rose-500 to-amber-500 text-white',
-    label: 'Female',
-  },
-  male: {
-    symbol: '♂',
-    color: 'text-sky-600 dark:text-sky-400',
-    badgeBg: 'bg-sky-50 border-sky-200/80 dark:bg-sky-950/40 dark:border-sky-900/60',
-    avatarGrad: 'from-blue-600 to-indigo-600 text-white',
-    label: 'Male',
-  },
-  other: {
-    symbol: '⚥',
-    color: 'text-violet-600 dark:text-violet-400',
-    badgeBg: 'bg-violet-50 border-violet-200/80 dark:bg-violet-950/40 dark:border-violet-900/60',
-    avatarGrad: 'from-violet-500 to-fuchsia-500 text-white',
-    label: 'Other',
-  },
-  unspecified: {
-    symbol: '○',
-    color: 'text-neutral-500 dark:text-neutral-400',
-    badgeBg: 'bg-neutral-100 border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700',
-    avatarGrad: 'from-neutral-700 to-neutral-900 text-neutral-200',
-    label: 'Unspecified',
-  },
-}
-
 export function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
   const { person, selected, isRoot } = data
   const name = displayName(person)
   const late = person.isLate
   const hasPhoto = Boolean(person.photoDataUrl)
   const familyName = person.familyName?.trim()
-  const gender = genderConfig[person.gender] ?? genderConfig.unspecified
+  const genderTheme = GENDER_THEMES[person.gender] ?? GENDER_THEMES.unspecified
 
   // Calculate age / year display (optional detail: only show if present)
   let ageDisplay: string | null = null
@@ -124,7 +85,7 @@ export function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
               />
             ) : (
               <div
-                className={`flex h-full w-full items-center justify-center bg-gradient-to-br text-xs font-semibold tracking-wider ${gender.avatarGrad}`}
+                className={`flex h-full w-full items-center justify-center bg-gradient-to-br text-xs font-semibold tracking-wider ${genderTheme.avatarGrad}`}
               >
                 {initials(name)}
               </div>
@@ -132,12 +93,11 @@ export function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
           </div>
 
           {/* Gender Icon Badge overlaid on bottom-right of avatar */}
-          <span
-            className={`absolute -bottom-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full border text-[10px] font-bold shadow-xs leading-none ${gender.badgeBg} ${gender.color}`}
-            title={`Gender: ${gender.label}`}
-          >
-            {gender.symbol}
-          </span>
+          <GenderBadge
+            gender={person.gender}
+            size="md"
+            className="absolute -bottom-1 -right-1"
+          />
 
           {/* Root Star Badge */}
           {isRoot && (

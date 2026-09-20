@@ -5,6 +5,8 @@ import { TEMPLATES } from '../canvas/templates'
 import { Badge } from '../ui/Badge'
 import { Button } from '../ui/Button'
 import { Card } from '../ui/Card'
+import { GenderBadge } from '../ui/GenderIcon'
+import type { Gender } from '../domain/types'
 
 export function LandingPage() {
   const [selectedNodeId, setSelectedNodeId] = useState<string>('1')
@@ -179,16 +181,11 @@ export function LandingPage() {
                         </div>
 
                         {/* Gender Icon Badge */}
-                        <span
-                          className={`absolute -bottom-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full border text-[10px] font-bold shadow-xs leading-none ${
-                            node.gender === 'female'
-                              ? 'bg-rose-50 border-rose-200/80 text-rose-600 dark:bg-rose-950/40 dark:border-rose-900/60 dark:text-rose-400'
-                              : 'bg-sky-50 border-sky-200/80 text-sky-600 dark:bg-sky-950/40 dark:border-sky-900/60 dark:text-sky-400'
-                          }`}
-                          title={`Gender: ${node.gender}`}
-                        >
-                          {node.gender === 'female' ? '♀' : '♂'}
-                        </span>
+                        <GenderBadge
+                          gender={node.gender as Gender}
+                          size="md"
+                          className="absolute -bottom-1 -right-1"
+                        />
                       </div>
 
                       <div className="min-w-0 flex-1">

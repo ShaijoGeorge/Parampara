@@ -21,7 +21,7 @@ export function UnionNode({ data }: NodeProps<Node<UnionNodeData>>) {
 
   return (
     <div
-      className="group relative flex items-center justify-center"
+      className="group relative flex h-7 w-7 items-center justify-center"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >

@@ -34,7 +34,7 @@ export function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
   return (
     <article
       className={[
-        'group relative w-[240px] rounded-2xl p-3 transition-all duration-200 backdrop-blur-md',
+        'group relative w-[240px] h-[76px] rounded-2xl p-3 flex items-center transition-all duration-200 backdrop-blur-md',
         'border',
         selected
           ? 'border-indigo-500 bg-white ring-2 ring-indigo-500/25 shadow-craft-md dark:border-indigo-400 dark:bg-[#181820] dark:ring-indigo-400/25'
@@ -43,15 +43,17 @@ export function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
             : 'border-black/[0.07] bg-white/95 hover:border-black/20 hover:shadow-craft-md hover:-translate-y-0.5 dark:border-white/[0.08] dark:bg-[#141419]/95 dark:hover:border-white/20',
       ].join(' ')}
     >
-      {/* Subtle Connection Handles */}
+      {/* Subtle Connection Handles with explicit IDs */}
       <Handle
         type="target"
         position={Position.Top}
+        id="t"
         className="!h-2 !w-2 !border !border-neutral-300 !bg-white dark:!border-neutral-600 dark:!bg-neutral-800 !opacity-0 group-hover:!opacity-100 transition-opacity"
       />
       <Handle
         type="source"
         position={Position.Bottom}
+        id="b"
         className="!h-2 !w-2 !border !border-neutral-300 !bg-white dark:!border-neutral-600 dark:!bg-neutral-800 !opacity-0 group-hover:!opacity-100 transition-opacity"
       />
       <Handle

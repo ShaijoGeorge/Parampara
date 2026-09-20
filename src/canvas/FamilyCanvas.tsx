@@ -7,9 +7,9 @@ import {
   type Node,
 } from '@xyflow/react'
 import { useEffect, useMemo, useState } from 'react'
-import { displayName, parentsOf } from '../domain/graph'
+import { displayName, parentsOf, spousesOf } from '../domain/graph'
 import type { Edge, Person, TemplateId } from '../domain/types'
-import { NODE, layoutFamily } from './layouts'
+import { NODE, SPOUSE_GAP, layoutFamily } from './layouts'
 import { PersonNode } from './PersonNode'
 import { templateById } from './templates'
 import { UnionNode } from './UnionNode'
@@ -92,7 +92,7 @@ export function FamilyCanvas({
         const rightPos = pos1.x <= pos2.x ? pos2 : pos1
 
         const UNION_SIZE = 28
-        const unionX = (leftPos.x + NODE.w + rightPos.x) / 2 - UNION_SIZE / 2
+        const unionX = leftPos.x + NODE.w + (SPOUSE_GAP - UNION_SIZE) / 2
         const unionY = (leftPos.y + rightPos.y) / 2 + NODE.h / 2 - UNION_SIZE / 2
         const unionId = `union-${pairKey}`
         coupleToUnionIdMap.set(pairKey, unionId)
@@ -154,19 +154,20 @@ export function FamilyCanvas({
         if (parentIds.length === 0) continue
 
         let routedViaCouple = false
-        // Check if any two parents form a couple with a union node
+
+        // Case A: Two or more parents recorded that form a couple union
         if (parentIds.length >= 2) {
           for (let i = 0; i < parentIds.length; i++) {
             for (let j = i + 1; j < parentIds.length; j++) {
               const pairKey = [parentIds[i]!, parentIds[j]!].sort().join('--')
               const unionId = coupleToUnionIdMap.get(pairKey)
               if (unionId) {
-                // Branch drops from the Couple Union!
                 nextEdges.push({
                   id: `parent-union-${unionId}-${person.id}`,
                   source: unionId,
                   target: person.id,
                   sourceHandle: 'b',
+                  targetHandle: 't',
                   type: 'smoothstep',
                   animated: false,
                   style: {
@@ -183,13 +184,44 @@ export function FamilyCanvas({
           }
         }
 
-        // If not routed via a couple union, route from each single parent
+        // Case B: Only one parent recorded, but that parent has a spouse union in this family unit
+        if (!routedViaCouple && parentIds.length === 1) {
+          const singleParentId = parentIds[0]!
+          const spouseIds = spousesOf(singleParentId, edges).filter((sId) =>
+            people.some((p) => p.id === sId),
+          )
+          if (spouseIds.length > 0) {
+            const pairKey = [singleParentId, spouseIds[0]!].sort().join('--')
+            const unionId = coupleToUnionIdMap.get(pairKey)
+            if (unionId) {
+              nextEdges.push({
+                id: `parent-union-${unionId}-${person.id}`,
+                source: unionId,
+                target: person.id,
+                sourceHandle: 'b',
+                targetHandle: 't',
+                type: 'smoothstep',
+                animated: false,
+                style: {
+                  stroke: '#94a3b8',
+                  strokeWidth: 2,
+                  opacity: 0.8,
+                },
+              })
+              routedViaCouple = true
+            }
+          }
+        }
+
+        // Case C: Truly single parent with no spouse union
         if (!routedViaCouple) {
           for (const pId of parentIds) {
             nextEdges.push({
               id: `parent-single-${pId}-${person.id}`,
               source: pId,
               target: person.id,
+              sourceHandle: 'b',
+              targetHandle: 't',
               type: 'smoothstep',
               animated: false,
               style: {

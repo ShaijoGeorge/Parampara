@@ -46,7 +46,7 @@ export function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
   return (
     <article
       className={[
-        'group relative w-[240px] h-[76px] rounded-2xl p-3 flex items-center transition-all duration-200 backdrop-blur-md',
+        'group relative w-[140px] h-[140px] rounded-2xl p-2.5 flex flex-col items-center justify-center text-center transition-all duration-200 backdrop-blur-md select-none',
         'border',
         selected
           ? 'border-indigo-500 bg-white ring-2 ring-indigo-500/25 shadow-craft-md dark:border-indigo-400 dark:bg-[#181820] dark:ring-indigo-400/25'
@@ -81,60 +81,59 @@ export function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
         className="!h-2 !w-2 !border !border-neutral-300 !bg-white dark:!border-neutral-600 dark:!bg-neutral-800 !opacity-0 group-hover:!opacity-100 transition-opacity"
       />
 
-      <div className="flex items-center gap-3">
-        {/* Avatar Cameo (Photo if available, otherwise character illustration) */}
-        <div className="relative shrink-0">
-          <CharacterAvatar
-            photoDataUrl={person.photoDataUrl}
-            gender={person.gender}
-            name={name}
-            isLate={late}
-            className="h-12 w-12"
-          />
-
-          {/* Gender Icon Badge overlaid on bottom-right of avatar */}
-          <GenderBadge
-            gender={person.gender}
-            size="md"
-            className="absolute -bottom-1 -right-1"
-          />
-
-          {/* Root Star Badge */}
-          {isRoot && (
-            <div
-              className="absolute -top-1 -left-1 flex h-4 w-4 items-center justify-center rounded-full bg-amber-400 text-[9px] text-amber-950 font-bold shadow-xs"
-              title="Tree Root Ancestor"
-            >
-              ★
-            </div>
-          )}
+      {/* Root Star Badge (Top-Left corner) */}
+      {isRoot && (
+        <div
+          className="absolute top-2 left-2 flex h-4 w-4 items-center justify-center rounded-full bg-amber-400 text-[9px] text-amber-950 font-bold shadow-xs z-10"
+          title="Tree Root Ancestor"
+        >
+          ★
         </div>
+      )}
 
-        {/* Member Details: Only necessary details (Name + Late badge) */}
-        <div className="min-w-0 flex-1 flex flex-col justify-center">
-          <div className="flex items-center justify-between gap-1.5">
-            <h3 className="text-[13.5px] font-bold tracking-tight text-neutral-900 dark:text-neutral-100 truncate">
-              {name}
-            </h3>
+      {/* Late / Deceased Badge (Top-Right corner) */}
+      {late && (
+        <span
+          className="absolute top-2 right-2 inline-flex items-center gap-0.5 rounded-full border border-stone-300/80 dark:border-stone-700 bg-stone-100/90 dark:bg-stone-900/80 px-1.5 py-0.5 text-[8.5px] font-medium text-stone-600 dark:text-stone-300 z-10"
+          title="Departed Ancestor"
+        >
+          <span className="text-[7px] text-amber-500">✦</span> Late
+        </span>
+      )}
 
-            {/* Late / Deceased Badge */}
-            {late && (
-              <span
-                className="shrink-0 inline-flex items-center gap-0.5 rounded-full border border-stone-300/80 dark:border-stone-700 bg-stone-100/90 dark:bg-stone-900/60 px-1.5 py-0.5 text-[9px] font-medium text-stone-600 dark:text-stone-300"
-                title="Departed Ancestor"
-              >
-                <span className="text-[8px] text-amber-500">✦</span> Late
-              </span>
-            )}
-          </div>
-        </div>
+      {/* Centered Avatar Cameo */}
+      <div className="relative shrink-0 mt-0.5">
+        <CharacterAvatar
+          photoDataUrl={person.photoDataUrl}
+          gender={person.gender}
+          name={name}
+          isLate={late}
+          className="h-12 w-12"
+        />
+
+        {/* Gender Icon Badge overlaid on bottom-right of avatar */}
+        <GenderBadge
+          gender={person.gender}
+          size="md"
+          className="absolute -bottom-1 -right-1 shadow-xs"
+        />
+      </div>
+
+      {/* Centered Name (up to 2 lines) */}
+      <div className="w-full mt-2 px-1">
+        <h3
+          className="text-[12.5px] font-bold tracking-tight text-neutral-900 dark:text-neutral-100 line-clamp-2 leading-snug break-words"
+          title={name}
+        >
+          {name}
+        </h3>
       </div>
 
       {/* Floating Quick Details Popover on Hover */}
-      <div className="absolute top-[calc(100%+6px)] left-0 w-[240px] pointer-events-none opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-150 ease-out z-[1000]">
+      <div className="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 w-[220px] pointer-events-none opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-150 ease-out z-[1000]">
         <div className="relative rounded-xl border border-neutral-200/90 dark:border-neutral-800 bg-white/95 dark:bg-[#16161f]/95 backdrop-blur-xl p-3 shadow-craft-xl text-left">
-          {/* Pointer notch arrow */}
-          <div className="absolute -top-1 left-6 h-2 w-2 rotate-45 border-t border-l border-neutral-200/90 dark:border-neutral-800 bg-white/95 dark:bg-[#16161f]/95" />
+          {/* Pointer notch arrow centered */}
+          <div className="absolute -top-1 left-1/2 -translate-x-1/2 h-2 w-2 rotate-45 border-t border-l border-neutral-200/90 dark:border-neutral-800 bg-white/95 dark:bg-[#16161f]/95" />
 
           {/* Header with full name and status */}
           <div className="flex items-start justify-between gap-1.5 mb-2 pb-1.5 border-b border-neutral-100 dark:border-neutral-800/80">

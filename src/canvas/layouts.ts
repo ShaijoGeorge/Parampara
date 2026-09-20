@@ -12,9 +12,9 @@ export interface LaidOutNode {
   y: number
 }
 
-export const NODE = { w: 240, h: 76 }
+export const NODE = { w: 140, h: 140 }
 export const GAP_X = 40
-export const GAP_Y = 90
+export const GAP_Y = 80
 export const SPOUSE_GAP = 50
 
 function unique(ids: string[]): string[] {

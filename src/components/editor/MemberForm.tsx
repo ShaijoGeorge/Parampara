@@ -1,7 +1,6 @@
-import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
-import { personFormSchema, type PersonFormValues } from '../../domain/schemas'
+import type { PersonFormValues } from '../../domain/schemas'
 import type { Person } from '../../domain/types'
 import { compressPhoto } from '../../lib/photo'
 import { Button } from '../../ui/Button'
@@ -19,7 +18,6 @@ export function MemberForm({
   onDelete?: () => void
 }) {
   const form = useForm<PersonFormValues>({
-    resolver: zodResolver(personFormSchema),
     defaultValues: toValues(person),
   })
 
@@ -84,7 +82,7 @@ export function MemberForm({
             type="number"
             placeholder="e.g. 1982"
             {...form.register('birthYear', {
-              valueAsNumber: true,
+              setValueAs: (v) => (v === '' || v === null || v === undefined || isNaN(Number(v)) ? undefined : Number(v)),
               onChange: (e) => {
                 const val = Number(e.target.value)
                 if (!isNaN(val) && val >= 1000 && val <= 2100) {
@@ -98,13 +96,13 @@ export function MemberForm({
             })}
           />
         </Field>
-        <Field label="Age (auto-calculated)">
+        <Field label="Age (optional)">
           <TextInput
             type="number"
-            min={0}
-            max={150}
             placeholder="e.g. 42"
-            {...form.register('age', { valueAsNumber: true })}
+            {...form.register('age', {
+              setValueAs: (v) => (v === '' || v === null || v === undefined || isNaN(Number(v)) ? undefined : Number(v)),
+            })}
           />
         </Field>
       </div>
@@ -112,9 +110,10 @@ export function MemberForm({
       <Field label="Expected children slots (optional)">
         <TextInput
           type="number"
-          min={0}
-          max={20}
-          {...form.register('expectedChildren', { valueAsNumber: true })}
+          placeholder="0"
+          {...form.register('expectedChildren', {
+            setValueAs: (v) => (v === '' || v === null || v === undefined || isNaN(Number(v)) ? 0 : Number(v)),
+          })}
         />
       </Field>
 
@@ -134,7 +133,7 @@ export function MemberForm({
                 type="number"
                 placeholder="e.g. 1984"
                 {...form.register('deathYear', {
-                  valueAsNumber: true,
+                  setValueAs: (v) => (v === '' || v === null || v === undefined || isNaN(Number(v)) ? undefined : Number(v)),
                   onChange: (e) => {
                     const val = Number(e.target.value)
                     if (!isNaN(val) && val >= 1000 && val <= 2100 && birthYear && !isNaN(birthYear)) {

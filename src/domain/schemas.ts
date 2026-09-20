@@ -11,20 +11,31 @@ export const templateIdSchema = z.enum([
   'mandala',
 ])
 
+export interface PersonFormValues {
+  givenName?: string
+  familyName?: string
+  gender?: 'female' | 'male' | 'other' | 'unspecified'
+  livingPlace?: string
+  isLate?: boolean
+  birthYear?: number
+  deathYear?: number
+  age?: number
+  notes?: string
+  expectedChildren?: number
+}
+
 export const personFormSchema = z.object({
-  givenName: z.string().trim().max(80),
-  familyName: z.string().trim().max(80),
-  gender: genderSchema,
-  livingPlace: z.string().trim().max(120),
-  isLate: z.boolean(),
+  givenName: z.string().optional(),
+  familyName: z.string().optional(),
+  gender: genderSchema.optional(),
+  livingPlace: z.string().optional(),
+  isLate: z.boolean().optional(),
   birthYear: z.number().optional(),
   deathYear: z.number().optional(),
   age: z.number().optional(),
-  notes: z.string(),
-  expectedChildren: z.number(),
+  notes: z.string().optional(),
+  expectedChildren: z.number().optional(),
 })
-
-export type PersonFormValues = z.infer<typeof personFormSchema>
 
 export const treeNameSchema = z
   .string()

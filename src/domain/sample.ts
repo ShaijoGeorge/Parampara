@@ -45,16 +45,20 @@ export function makeSampleBundle(): TreeBundle {
   const people: Person[] = [
     person(ids.nani, 'Kamala', 'Menon', 'female', 'Thrissur', {
       isLate: true,
+      birthYear: 1932,
       deathYear: 2014,
+      age: 82,
     }),
     person(ids.nana, 'Raghavan', 'Menon', 'male', 'Thrissur', {
       isLate: true,
+      birthYear: 1928,
       deathYear: 2009,
+      age: 81,
     }),
-    person(ids.ma, 'Lakshmi', 'Nair', 'female', 'Kochi'),
-    person(ids.papa, 'Arun', 'Nair', 'male', 'Kochi'),
-    person(ids.me, 'Maya', 'Nair', 'female', 'Bengaluru'),
-    person(ids.sibling, 'Dev', 'Nair', 'male', 'Kochi'),
+    person(ids.ma, 'Lakshmi', 'Nair', 'female', 'Kochi', { age: 58 }),
+    person(ids.papa, 'Arun', 'Nair', 'male', 'Kochi', { age: 62 }),
+    person(ids.me, 'Maya', 'Nair', 'female', 'Bengaluru', { age: 28 }),
+    person(ids.sibling, 'Dev', 'Nair', 'male', 'Kochi', { age: 24 }),
   ]
 
   const edge = (fromId: string, toId: string, type: Edge['type']): Edge => ({

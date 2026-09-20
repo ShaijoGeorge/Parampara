@@ -58,6 +58,25 @@ export function MemberForm({
         </Field>
       </div>
 
+      <div className="grid grid-cols-2 gap-2.5">
+        <Field label="Age (optional)">
+          <TextInput
+            type="number"
+            min={0}
+            max={150}
+            placeholder="e.g. 42"
+            {...form.register('age', { valueAsNumber: true })}
+          />
+        </Field>
+        <Field label="Birth Year (optional)">
+          <TextInput
+            type="number"
+            placeholder="e.g. 1982"
+            {...form.register('birthYear', { valueAsNumber: true })}
+          />
+        </Field>
+      </div>
+
       <Field label="Expected children slots">
         <TextInput
           type="number"
@@ -138,7 +157,9 @@ function toValues(person: Person): PersonFormValues {
     gender: person.gender,
     livingPlace: person.livingPlace,
     isLate: person.isLate,
+    birthYear: person.birthYear,
     deathYear: person.deathYear,
+    age: person.age,
     notes: person.notes ?? '',
     expectedChildren: person.expectedChildren ?? 0,
   }

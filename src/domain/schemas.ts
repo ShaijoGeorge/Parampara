@@ -17,7 +17,9 @@ export const personFormSchema = z.object({
   gender: genderSchema,
   livingPlace: z.string().trim().max(120),
   isLate: z.boolean(),
+  birthYear: z.number().int().min(1000).max(2100).optional(),
   deathYear: z.number().int().min(1000).max(2100).optional(),
+  age: z.number().int().min(0).max(150).optional(),
   notes: z.string().max(500).optional(),
   expectedChildren: z.number().int().min(0).max(20),
 })

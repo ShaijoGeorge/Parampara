@@ -20,7 +20,9 @@ export interface Person {
   gender: Gender
   livingPlace: string
   isLate: boolean
+  birthYear?: number
   deathYear?: number
+  age?: number
   photoDataUrl?: string
   notes?: string
   isPlaceholder?: boolean

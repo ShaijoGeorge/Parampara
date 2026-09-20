@@ -13,56 +13,46 @@ export function LandingPage() {
     {
       id: '1',
       name: 'Kamala Menon',
-      clan: 'Menon Lineage',
-      place: 'Thrissur',
+      familyName: 'Menon Lineage',
       late: true,
-      year: '1932–2014',
+      age: 'Passed at 82',
       gender: 'female',
-      role: 'Matriarch',
       avatarBg: 'bg-gradient-to-br from-rose-500 to-amber-500 text-white',
     },
     {
       id: '2',
       name: 'Raghavan Menon',
-      clan: 'Menon Lineage',
-      place: 'Thrissur',
+      familyName: 'Menon Lineage',
       late: true,
-      year: '1928–2009',
+      age: 'Passed at 81',
       gender: 'male',
-      role: 'Patriarch',
       avatarBg: 'bg-gradient-to-br from-blue-600 to-indigo-600 text-white',
     },
     {
       id: '3',
       name: 'Lakshmi Nair',
-      clan: 'Nair Household',
-      place: 'Kochi',
+      familyName: 'Nair Household',
       late: false,
-      year: 'Living',
+      age: 'Age 58',
       gender: 'female',
-      role: 'Daughter',
       avatarBg: 'bg-gradient-to-br from-rose-500 to-amber-500 text-white',
     },
     {
       id: '4',
       name: 'Arun Nair',
-      clan: 'Nair Household',
-      place: 'Kochi',
+      familyName: 'Nair Household',
       late: false,
-      year: 'Living',
+      age: 'Age 62',
       gender: 'male',
-      role: 'Son-in-Law',
       avatarBg: 'bg-gradient-to-br from-blue-600 to-indigo-600 text-white',
     },
     {
       id: '5',
       name: 'Maya Nair',
-      clan: 'Next Generation',
-      place: 'Bengaluru',
+      familyName: 'Nair Household',
       late: false,
-      year: 'Living',
+      age: 'Age 28',
       gender: 'female',
-      role: 'Granddaughter',
       avatarBg: 'bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white',
     },
   ]
@@ -167,44 +157,63 @@ export function LandingPage() {
                     className={`group relative rounded-2xl border p-3.5 transition-all duration-200 cursor-pointer ${
                       isSelected
                         ? 'border-indigo-500 bg-white ring-2 ring-indigo-500/20 shadow-craft-md dark:border-indigo-400 dark:bg-[#181820] dark:ring-indigo-400/20'
-                        : 'border-black/[0.07] bg-white/80 hover:border-black/20 hover:bg-white hover:shadow-craft-sm dark:border-white/[0.08] dark:bg-[#141419]/80 dark:hover:border-white/20'
+                        : node.late
+                          ? 'border-stone-300/90 bg-stone-50/95 dark:border-stone-700/80 dark:bg-[#141418]/95 shadow-craft-xs ring-1 ring-stone-400/20 hover:border-stone-400 dark:hover:border-stone-600'
+                          : 'border-black/[0.07] bg-white/80 hover:border-black/20 hover:bg-white hover:shadow-craft-sm dark:border-white/[0.08] dark:bg-[#141419]/80 dark:hover:border-white/20'
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <div className="relative shrink-0">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-xl overflow-hidden shadow-xs ring-1 ring-black/5 dark:ring-white/10">
+                        <div
+                          className={`flex h-12 w-12 items-center justify-center rounded-xl overflow-hidden shadow-xs ring-1 transition-transform duration-200 group-hover:scale-105 ${
+                            node.late
+                              ? 'ring-stone-400/30 dark:ring-stone-600/30 grayscale'
+                              : 'ring-black/5 dark:ring-white/10'
+                          }`}
+                        >
                           <div
                             className={`flex h-full w-full items-center justify-center text-xs font-semibold tracking-wider ${node.avatarBg}`}
                           >
                             {node.name.split(' ').map((n) => n[0]).join('')}
                           </div>
                         </div>
-                        {node.late && (
-                          <span
-                            className="absolute -bottom-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-amber-400 text-[9px] text-amber-950 font-bold shadow-xs"
-                            title="Departed Ancestor"
-                          >
-                            ★
-                          </span>
-                        )}
+
+                        {/* Gender Icon Badge */}
+                        <span
+                          className={`absolute -bottom-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full border text-[10px] font-bold shadow-xs leading-none ${
+                            node.gender === 'female'
+                              ? 'bg-rose-50 border-rose-200/80 text-rose-600 dark:bg-rose-950/40 dark:border-rose-900/60 dark:text-rose-400'
+                              : 'bg-sky-50 border-sky-200/80 text-sky-600 dark:bg-sky-950/40 dark:border-sky-900/60 dark:text-sky-400'
+                          }`}
+                          title={`Gender: ${node.gender}`}
+                        >
+                          {node.gender === 'female' ? '♀' : '♂'}
+                        </span>
                       </div>
+
                       <div className="min-w-0 flex-1">
-                        <div className="flex items-center justify-between gap-1">
-                          <p className="text-sm font-semibold tracking-tight text-neutral-900 dark:text-neutral-100 truncate">
+                        <div className="flex items-center justify-between gap-1.5">
+                          <p className="text-[13px] font-bold tracking-tight text-neutral-900 dark:text-neutral-100 truncate">
                             {node.name}
                           </p>
                           {node.late && (
-                            <span className="rounded-full bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 text-[9px] font-medium text-neutral-500 dark:text-neutral-400">
-                              Late
+                            <span className="shrink-0 inline-flex items-center gap-0.5 rounded-full border border-stone-300/80 dark:border-stone-700 bg-stone-100/90 dark:bg-stone-900/60 px-1.5 py-0.5 text-[9px] font-medium text-stone-600 dark:text-stone-300">
+                              <span className="text-[8px] text-amber-500">✦</span> Late
                             </span>
                           )}
                         </div>
-                        <p className="text-xs text-neutral-500 dark:text-neutral-400 truncate mt-0.5">
-                          {node.clan}
-                        </p>
-                        <p className="text-[11px] text-neutral-400 dark:text-neutral-500 truncate mt-0.5">
-                          {node.place} · {node.year}
-                        </p>
+
+                        {node.familyName && (
+                          <p className="text-xs text-neutral-500 dark:text-neutral-400 truncate mt-0.5">
+                            {node.familyName}
+                          </p>
+                        )}
+
+                        {node.age && (
+                          <p className="text-[11px] font-medium text-indigo-600/90 dark:text-indigo-400/90 truncate mt-0.5">
+                            {node.age}
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>

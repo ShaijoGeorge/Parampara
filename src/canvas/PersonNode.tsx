@@ -10,17 +10,65 @@ export type PersonNodeData = {
   onAddRelative?: (kind: 'parent' | 'spouse' | 'child' | 'sibling') => void
 }
 
-const genderTones: Record<Person['gender'], string> = {
-  female: 'from-rose-500 to-amber-500 text-white',
-  male: 'from-blue-600 to-indigo-600 text-white',
-  other: 'from-violet-500 to-fuchsia-500 text-white',
-  unspecified: 'from-neutral-700 to-neutral-900 text-neutral-200',
+const genderConfig: Record<
+  Person['gender'],
+  {
+    symbol: string
+    color: string
+    badgeBg: string
+    avatarGrad: string
+    label: string
+  }
+> = {
+  female: {
+    symbol: '♀',
+    color: 'text-rose-600 dark:text-rose-400',
+    badgeBg: 'bg-rose-50 border-rose-200/80 dark:bg-rose-950/40 dark:border-rose-900/60',
+    avatarGrad: 'from-rose-500 to-amber-500 text-white',
+    label: 'Female',
+  },
+  male: {
+    symbol: '♂',
+    color: 'text-sky-600 dark:text-sky-400',
+    badgeBg: 'bg-sky-50 border-sky-200/80 dark:bg-sky-950/40 dark:border-sky-900/60',
+    avatarGrad: 'from-blue-600 to-indigo-600 text-white',
+    label: 'Male',
+  },
+  other: {
+    symbol: '⚥',
+    color: 'text-violet-600 dark:text-violet-400',
+    badgeBg: 'bg-violet-50 border-violet-200/80 dark:bg-violet-950/40 dark:border-violet-900/60',
+    avatarGrad: 'from-violet-500 to-fuchsia-500 text-white',
+    label: 'Other',
+  },
+  unspecified: {
+    symbol: '○',
+    color: 'text-neutral-500 dark:text-neutral-400',
+    badgeBg: 'bg-neutral-100 border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700',
+    avatarGrad: 'from-neutral-700 to-neutral-900 text-neutral-200',
+    label: 'Unspecified',
+  },
 }
 
 export function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
   const { person, selected, isRoot } = data
   const name = displayName(person)
   const late = person.isLate
+  const hasPhoto = Boolean(person.photoDataUrl)
+  const familyName = person.familyName?.trim()
+  const gender = genderConfig[person.gender] ?? genderConfig.unspecified
+
+  // Calculate age / year display (optional detail: only show if present)
+  let ageDisplay: string | null = null
+  if (person.age !== undefined && !isNaN(person.age)) {
+    ageDisplay = late ? `Passed at ${person.age}` : `Age ${person.age}`
+  } else if (person.birthYear && person.deathYear) {
+    ageDisplay = `${person.birthYear}–${person.deathYear}`
+  } else if (person.deathYear) {
+    ageDisplay = `†${person.deathYear}`
+  } else if (person.birthYear) {
+    ageDisplay = `b. ${person.birthYear}`
+  }
 
   return (
     <article
@@ -29,8 +77,9 @@ export function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
         'border',
         selected
           ? 'border-indigo-500 bg-white ring-2 ring-indigo-500/25 shadow-craft-md dark:border-indigo-400 dark:bg-[#181820] dark:ring-indigo-400/25'
-          : 'border-black/[0.07] bg-white/95 hover:border-black/20 hover:shadow-craft-md hover:-translate-y-0.5 dark:border-white/[0.08] dark:bg-[#141419]/95 dark:hover:border-white/20',
-        late ? 'opacity-85' : '',
+          : late
+            ? 'border-stone-300/90 bg-stone-50/95 dark:border-stone-700/80 dark:bg-[#141418]/95 shadow-craft-xs ring-1 ring-stone-400/20 hover:border-stone-400 dark:hover:border-stone-600'
+            : 'border-black/[0.07] bg-white/95 hover:border-black/20 hover:shadow-craft-md hover:-translate-y-0.5 dark:border-white/[0.08] dark:bg-[#141419]/95 dark:hover:border-white/20',
       ].join(' ')}
     >
       {/* Subtle Connection Handles */}
@@ -58,58 +107,80 @@ export function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
       />
 
       <div className="flex items-center gap-3">
-        {/* Avatar Cameo */}
+        {/* Avatar Cameo (Photo if available, otherwise monogram with gender tone) */}
         <div className="relative shrink-0">
-          <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl ring-1 ring-black/5 dark:ring-white/10 shadow-xs">
-            {person.photoDataUrl ? (
+          <div
+            className={`flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl ring-1 shadow-xs transition-transform duration-200 group-hover:scale-105 ${
+              late
+                ? 'ring-stone-400/30 dark:ring-stone-600/30 grayscale'
+                : 'ring-black/5 dark:ring-white/10'
+            }`}
+          >
+            {hasPhoto ? (
               <img
                 src={person.photoDataUrl}
                 alt={name}
-                className={`h-full w-full object-cover transition-transform duration-200 group-hover:scale-105 ${
-                  late ? 'grayscale' : ''
-                }`}
+                className="h-full w-full object-cover"
               />
             ) : (
               <div
-                className={`flex h-full w-full items-center justify-center bg-gradient-to-br text-xs font-semibold tracking-wider ${genderTones[person.gender]}`}
+                className={`flex h-full w-full items-center justify-center bg-gradient-to-br text-xs font-semibold tracking-wider ${gender.avatarGrad}`}
               >
                 {initials(name)}
               </div>
             )}
           </div>
 
-          {/* Root Pill Icon */}
+          {/* Gender Icon Badge overlaid on bottom-right of avatar */}
+          <span
+            className={`absolute -bottom-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full border text-[10px] font-bold shadow-xs leading-none ${gender.badgeBg} ${gender.color}`}
+            title={`Gender: ${gender.label}`}
+          >
+            {gender.symbol}
+          </span>
+
+          {/* Root Star Badge */}
           {isRoot && (
             <div
               className="absolute -top-1 -left-1 flex h-4 w-4 items-center justify-center rounded-full bg-amber-400 text-[9px] text-amber-950 font-bold shadow-xs"
-              title="Tree Root"
+              title="Tree Root Ancestor"
             >
               ★
             </div>
           )}
         </div>
 
-        {/* Member Details */}
+        {/* Member Details: Only Name and present optional details */}
         <div className="min-w-0 flex-1">
-          <div className="flex items-center justify-between gap-1">
-            <h3 className="text-[13px] font-semibold tracking-tight text-neutral-900 dark:text-neutral-100 truncate">
+          <div className="flex items-center justify-between gap-1.5">
+            <h3 className="text-[13px] font-bold tracking-tight text-neutral-900 dark:text-neutral-100 truncate">
               {name}
             </h3>
+
+            {/* Late / Deceased Badge */}
             {late && (
-              <span className="shrink-0 rounded-full bg-neutral-100 px-1.5 py-0.5 text-[9px] font-medium text-neutral-500 dark:bg-neutral-800 dark:text-neutral-400">
-                Late
+              <span
+                className="shrink-0 inline-flex items-center gap-0.5 rounded-full border border-stone-300/80 dark:border-stone-700 bg-stone-100/90 dark:bg-stone-900/60 px-1.5 py-0.5 text-[9px] font-medium text-stone-600 dark:text-stone-300"
+                title="Departed Ancestor"
+              >
+                <span className="text-[8px] text-amber-500">✦</span> Late
               </span>
             )}
           </div>
 
-          <p className="truncate text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
-            {person.familyName || 'Family clan unset'}
-          </p>
+          {/* Family Name (optional: only if provided) */}
+          {familyName ? (
+            <p className="truncate text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
+              {familyName}
+            </p>
+          ) : null}
 
-          <p className="truncate text-[11px] text-neutral-400 dark:text-neutral-500 mt-0.5">
-            {person.livingPlace || 'Place unset'}
-            {late && person.deathYear ? ` · †${person.deathYear}` : ''}
-          </p>
+          {/* Age / Years (optional: only if provided) */}
+          {ageDisplay ? (
+            <p className="truncate text-[11px] font-medium text-indigo-600/90 dark:text-indigo-400/90 mt-0.5">
+              {ageDisplay}
+            </p>
+          ) : null}
         </div>
       </div>
     </article>

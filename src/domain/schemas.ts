@@ -12,16 +12,16 @@ export const templateIdSchema = z.enum([
 ])
 
 export const personFormSchema = z.object({
-  givenName: z.string().trim().min(1, 'A given name is required').max(80),
+  givenName: z.string().trim().max(80),
   familyName: z.string().trim().max(80),
   gender: genderSchema,
   livingPlace: z.string().trim().max(120),
   isLate: z.boolean(),
-  birthYear: z.number().int().min(1000).max(2100).optional(),
-  deathYear: z.number().int().min(1000).max(2100).optional(),
-  age: z.number().int().min(0).max(150).optional(),
-  notes: z.string().max(500).optional(),
-  expectedChildren: z.number().int().min(0).max(20),
+  birthYear: z.number().optional(),
+  deathYear: z.number().optional(),
+  age: z.number().optional(),
+  notes: z.string(),
+  expectedChildren: z.number(),
 })
 
 export type PersonFormValues = z.infer<typeof personFormSchema>
@@ -29,8 +29,9 @@ export type PersonFormValues = z.infer<typeof personFormSchema>
 export const treeNameSchema = z
   .string()
   .trim()
-  .min(1, 'Give this tree a name')
   .max(80)
+  .optional()
+  .transform((val) => (val && val.length > 0 ? val : 'Untitled Family Tree'))
 
 export const exportPayloadSchema = z.object({
   version: z.literal(1),

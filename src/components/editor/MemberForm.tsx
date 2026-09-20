@@ -53,14 +53,11 @@ export function MemberForm({
       onSubmit={form.handleSubmit((values) => onSave(values, person.photoDataUrl))}
     >
       <div className="grid grid-cols-2 gap-2.5">
-        <Field label="Given name">
-          <TextInput {...form.register('givenName')} autoComplete="given-name" />
-          {form.formState.errors.givenName ? (
-            <p className="text-xs text-rose-500 mt-1">{form.formState.errors.givenName.message}</p>
-          ) : null}
+        <Field label="Given name (optional)">
+          <TextInput {...form.register('givenName')} autoComplete="given-name" placeholder="e.g. Thomas" />
         </Field>
-        <Field label="Family name">
-          <TextInput {...form.register('familyName')} autoComplete="family-name" />
+        <Field label="Family name (optional)">
+          <TextInput {...form.register('familyName')} autoComplete="family-name" placeholder="e.g. Kalluvilayil" />
         </Field>
       </div>
 
@@ -76,7 +73,7 @@ export function MemberForm({
             </Select>
           </div>
         </Field>
-        <Field label="Place of living">
+        <Field label="Place of living (optional)">
           <TextInput {...form.register('livingPlace')} />
         </Field>
       </div>
@@ -112,7 +109,7 @@ export function MemberForm({
         </Field>
       </div>
 
-      <Field label="Expected children slots">
+      <Field label="Expected children slots (optional)">
         <TextInput
           type="number"
           min={0}
@@ -132,7 +129,7 @@ export function MemberForm({
         </label>
         {isLate ? (
           <div className="mt-2.5 pt-2.5 border-t border-black/[0.06] dark:border-white/[0.06]">
-            <Field label="Year of Passing">
+            <Field label="Year of Passing (optional)">
               <TextInput
                 type="number"
                 placeholder="e.g. 1984"
@@ -154,11 +151,11 @@ export function MemberForm({
         ) : null}
       </div>
 
-      <Field label="Biographical notes">
+      <Field label="Biographical notes (optional)">
         <TextArea rows={2} placeholder="Stories, titles, ancestral notes..." {...form.register('notes')} />
       </Field>
 
-      <Field label="Portrait photo">
+      <Field label="Portrait photo (optional)">
         <div className="flex items-center gap-3">
           <CharacterAvatar
             photoDataUrl={person.photoDataUrl}

@@ -25,6 +25,23 @@ export function MemberForm({
 
   const isLate = useWatch({ control: form.control, name: 'isLate' })
   const currentGender = useWatch({ control: form.control, name: 'gender' }) ?? person.gender
+  const birthYear = useWatch({ control: form.control, name: 'birthYear' })
+  const deathYear = useWatch({ control: form.control, name: 'deathYear' })
+
+  // Automatically calculate age whenever birthYear, deathYear, or isLate status changes
+  useEffect(() => {
+    if (birthYear !== undefined && !isNaN(birthYear) && birthYear >= 1000 && birthYear <= 2100) {
+      const currentYear = new Date().getFullYear()
+      const endYear =
+        isLate && deathYear !== undefined && !isNaN(deathYear) && deathYear >= birthYear
+          ? deathYear
+          : currentYear
+      const calculatedAge = endYear - birthYear
+      if (calculatedAge >= 0 && calculatedAge <= 150) {
+        form.setValue('age', calculatedAge, { shouldDirty: true, shouldValidate: true })
+      }
+    }
+  }, [birthYear, deathYear, isLate, form])
 
   useEffect(() => {
     form.reset(toValues(person))
@@ -65,20 +82,32 @@ export function MemberForm({
       </div>
 
       <div className="grid grid-cols-2 gap-2.5">
-        <Field label="Age (optional)">
+        <Field label="Birth Year (optional)">
+          <TextInput
+            type="number"
+            placeholder="e.g. 1982"
+            {...form.register('birthYear', {
+              valueAsNumber: true,
+              onChange: (e) => {
+                const val = Number(e.target.value)
+                if (!isNaN(val) && val >= 1000 && val <= 2100) {
+                  const endYear = isLate && deathYear && !isNaN(deathYear) ? deathYear : new Date().getFullYear()
+                  const calculated = endYear - val
+                  if (calculated >= 0 && calculated <= 150) {
+                    form.setValue('age', calculated, { shouldDirty: true, shouldValidate: true })
+                  }
+                }
+              },
+            })}
+          />
+        </Field>
+        <Field label="Age (auto-calculated)">
           <TextInput
             type="number"
             min={0}
             max={150}
             placeholder="e.g. 42"
             {...form.register('age', { valueAsNumber: true })}
-          />
-        </Field>
-        <Field label="Birth Year (optional)">
-          <TextInput
-            type="number"
-            placeholder="e.g. 1982"
-            {...form.register('birthYear', { valueAsNumber: true })}
           />
         </Field>
       </div>
@@ -107,7 +136,18 @@ export function MemberForm({
               <TextInput
                 type="number"
                 placeholder="e.g. 1984"
-                {...form.register('deathYear', { valueAsNumber: true })}
+                {...form.register('deathYear', {
+                  valueAsNumber: true,
+                  onChange: (e) => {
+                    const val = Number(e.target.value)
+                    if (!isNaN(val) && val >= 1000 && val <= 2100 && birthYear && !isNaN(birthYear)) {
+                      const calculated = val - birthYear
+                      if (calculated >= 0 && calculated <= 150) {
+                        form.setValue('age', calculated, { shouldDirty: true, shouldValidate: true })
+                      }
+                    }
+                  },
+                })}
               />
             </Field>
           </div>
@@ -157,6 +197,18 @@ export function MemberForm({
 }
 
 function toValues(person: Person): PersonFormValues {
+  let initialAge = person.age
+  if ((initialAge === undefined || isNaN(initialAge)) && person.birthYear && !isNaN(person.birthYear)) {
+    const endYear =
+      person.isLate && person.deathYear && !isNaN(person.deathYear) && person.deathYear >= person.birthYear
+        ? person.deathYear
+        : new Date().getFullYear()
+    const calculated = endYear - person.birthYear
+    if (calculated >= 0 && calculated <= 150) {
+      initialAge = calculated
+    }
+  }
+
   return {
     givenName: person.givenName,
     familyName: person.familyName,
@@ -165,7 +217,7 @@ function toValues(person: Person): PersonFormValues {
     isLate: person.isLate,
     birthYear: person.birthYear,
     deathYear: person.deathYear,
-    age: person.age,
+    age: initialAge,
     notes: person.notes ?? '',
     expectedChildren: person.expectedChildren ?? 0,
   }

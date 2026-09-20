@@ -131,9 +131,23 @@ export function TreeDetailPage() {
     if (!bundle || !selectedPersonId) return
     const current = bundle.people.find((p) => p.id === selectedPersonId)
     if (!current) return
+
+    let finalAge = values.age
+    if ((finalAge === undefined || isNaN(finalAge)) && values.birthYear && !isNaN(values.birthYear)) {
+      const endYear =
+        values.isLate && values.deathYear && !isNaN(values.deathYear) && values.deathYear >= values.birthYear
+          ? values.deathYear
+          : new Date().getFullYear()
+      const calc = endYear - values.birthYear
+      if (calc >= 0 && calc <= 150) {
+        finalAge = calc
+      }
+    }
+
     const updated: Person = {
       ...current,
       ...values,
+      age: finalAge,
       photoDataUrl: photoDataUrl !== undefined ? photoDataUrl : current.photoDataUrl,
       isPlaceholder: false,
     }

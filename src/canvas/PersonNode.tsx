@@ -19,10 +19,22 @@ export function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
   const late = person.isLate
   const familyName = person.familyName?.trim()
 
-  // Calculate age / year display (optional detail: only show if present)
+  // Calculate age / year display (automatically calculate age if birthYear is given)
   let ageDisplay: string | null = null
-  if (person.age !== undefined && !isNaN(person.age)) {
-    ageDisplay = late ? `Passed at ${person.age}` : `Age ${person.age}`
+  let effectiveAge = person.age
+  if ((effectiveAge === undefined || isNaN(effectiveAge)) && person.birthYear && !isNaN(person.birthYear)) {
+    const endYear =
+      late && person.deathYear && !isNaN(person.deathYear) && person.deathYear >= person.birthYear
+        ? person.deathYear
+        : new Date().getFullYear()
+    const calc = endYear - person.birthYear
+    if (calc >= 0 && calc <= 150) {
+      effectiveAge = calc
+    }
+  }
+
+  if (effectiveAge !== undefined && !isNaN(effectiveAge)) {
+    ageDisplay = late ? `Passed at ${effectiveAge}` : `Age ${effectiveAge}`
   } else if (person.birthYear && person.deathYear) {
     ageDisplay = `${person.birthYear}–${person.deathYear}`
   } else if (person.deathYear) {
